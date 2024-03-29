@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:pica/shared/theme.dart';
 import 'package:pica/ui/check_auth.dart';
+import 'package:intl/intl.dart';
+// ignore: depend_on_referenced_packages
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
+  Intl.defaultLocale = 'id';
   runApp(const MyApp());
 }
 
@@ -36,6 +40,15 @@ class _MyAppState extends State<MyApp> {
             selectionHandleColor: Color(0xFF186968)),
         useMaterial3: true,
       ),
+      localizationsDelegates: const [
+        // ...delegasi lokal lainnya
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en', 'US'),
+        Locale('id', 'ID'),
+      ],
       home: const CheckAuth(),
     );
   }

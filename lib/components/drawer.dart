@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pica/services/auth_service.dart';
 import 'package:pica/shared/theme.dart';
+import 'package:pica/ui/auth/login_page.dart';
 import 'package:pica/ui/home/comp/verifikasi_apk_page.dart';
 import 'package:pica/ui/home/comp/verifikasi_kampanye_page.dart';
 import 'package:pica/ui/home/comp/verifikasi_logistik_page.dart';
@@ -118,6 +120,9 @@ class DrawerView extends StatelessWidget {
                       if (pageActive != 'home') {
                         Navigator.pop(context);
                       }
+                      if (pageActive == 'logistik upload') {
+                        Navigator.pop(context);
+                      }
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -134,6 +139,9 @@ class DrawerView extends StatelessWidget {
                     Navigator.pop(context);
                     if (pageActive != 'apk') {
                       if (pageActive != 'home') {
+                        Navigator.pop(context);
+                      }
+                      if (pageActive == 'logistik upload') {
                         Navigator.pop(context);
                       }
                       Navigator.push(
@@ -154,6 +162,9 @@ class DrawerView extends StatelessWidget {
                       if (pageActive != 'home') {
                         Navigator.pop(context);
                       }
+                      if (pageActive == 'logistik upload') {
+                        Navigator.pop(context);
+                      }
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -161,6 +172,17 @@ class DrawerView extends StatelessWidget {
                         ),
                       );
                     }
+                  },
+                ),
+                CustomMenuDrawer(
+                  urlIcon: 'assets/ic_kampanye.png',
+                  title: 'Logout',
+                  onPressed: () {
+                    logout().then((value) => Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const LoginPage()),
+                        (route) => false));
                   },
                 )
               ],

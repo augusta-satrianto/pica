@@ -1,13 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:pica/components/drawer.dart';
+import 'package:pica/models/api_response_model.dart';
+import 'package:pica/models/dashboard_model.dart';
+import 'package:pica/services/dashboard_service.dart';
 import 'package:pica/shared/theme.dart';
 import 'package:pica/ui/home/comp/verifikasi_apk_page.dart';
 import 'package:pica/ui/home/comp/verifikasi_kampanye_page.dart';
 import 'package:pica/ui/home/comp/verifikasi_logistik_page.dart';
 import 'package:pica/ui/home/comp/verifikasi_mobile_page.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  DashboardModel? dashboardModel;
+  void _getDashboard() async {
+    ApiResponse response = await getDashboard();
+    if (response.error == null) {
+      dashboardModel = response.data as DashboardModel;
+      setState(() {});
+    } else {
+      // ignore: use_build_context_synchronously
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${response.error}')),
+        );
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getDashboard();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,13 +85,13 @@ class HomePage extends StatelessWidget {
                           Container(
                             width: 45.76,
                             height: 45,
-                            margin: EdgeInsets.only(right: 10),
+                            margin: const EdgeInsets.only(right: 10),
                             decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 border: Border.all(
                                   color: const Color(0xFFD9D9D9),
                                 ),
-                                image: DecorationImage(
+                                image: const DecorationImage(
                                     image: AssetImage(
                                       'assets/img_profile.png',
                                     ),
@@ -129,6 +159,7 @@ class HomePage extends StatelessWidget {
               ],
             ),
 
+            // Verifikasi Logistik
             Container(
               width: double.infinity,
               height: 117,
@@ -163,6 +194,7 @@ class HomePage extends StatelessWidget {
                   ),
                   const Spacer(),
                   CustomButtonAdd(
+                    text: 'Detail',
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -180,242 +212,74 @@ class HomePage extends StatelessWidget {
             ),
 
             //Verifikasi Mobile
-            Container(
-              width: double.infinity,
-              height: 180,
-              margin: const EdgeInsets.symmetric(horizontal: 30),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [Color(0xFFD6EEEE), Colors.white],
-                ),
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFF000000).withOpacity(0.23),
-                    spreadRadius: 0,
-                    blurRadius: 3,
-                    offset: const Offset(0, 6),
+            CustomVerifikasi(
+              title: 'Verifikasi Mobile',
+              countTotal: dashboardModel != null
+                  ? dashboardModel!.validasiMobile.total.toString()
+                  : '',
+              countValid: dashboardModel != null
+                  ? dashboardModel!.validasiMobile.valid.toString()
+                  : '',
+              countInvalid: dashboardModel != null
+                  ? dashboardModel!.validasiMobile.invalid.toString()
+                  : '',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const VerifikasiMobilePage(),
                   ),
-                ],
-              ),
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  Text(
-                    'Verifikasi Mobile',
-                    style: poppins.copyWith(
-                        fontWeight: semiBold,
-                        fontSize: 16,
-                        color: const Color(0xFF186968)),
-                  ),
-                  const SizedBox(
-                    height: 9,
-                  ),
-                  Text(
-                    'TOTAL',
-                    style: poppins.copyWith(
-                        fontWeight: medium,
-                        fontSize: 12,
-                        color: const Color(0xFF808080)),
-                  ),
-                  Text(
-                    '50',
-                    style: poppins.copyWith(
-                        fontWeight: bold,
-                        fontSize: 16,
-                        color: const Color(0xFF232323)),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      HomeWidget1(title: 'Valid', value: 43),
-                      SizedBox(
-                        width: 30,
-                      ),
-                      HomeWidget1(title: 'Invalid', value: 7),
-                    ],
-                  ),
-                  const Spacer(),
-                  CustomButtonAdd(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const VerifikasiMobilePage(),
-                        ),
-                      );
-                    },
-                  )
-                ],
-              ),
+                );
+              },
             ),
             const SizedBox(
               height: 27,
             ),
             //Verifikasi APK
-            Container(
-              width: double.infinity,
-              height: 180,
-              margin: const EdgeInsets.symmetric(horizontal: 30),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [Color(0xFFD6EEEE), Colors.white],
-                ),
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFF000000).withOpacity(0.23),
-                    spreadRadius: 0,
-                    blurRadius: 3,
-                    offset: const Offset(0, 6),
+            CustomVerifikasi(
+              title: 'Verifikasi APK',
+              countTotal: dashboardModel != null
+                  ? dashboardModel!.validasiAPK.total.toString()
+                  : '',
+              countValid: dashboardModel != null
+                  ? dashboardModel!.validasiAPK.valid.toString()
+                  : '',
+              countInvalid: dashboardModel != null
+                  ? dashboardModel!.validasiAPK.invalid.toString()
+                  : '',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const VerifikasiApkPage(),
                   ),
-                ],
-              ),
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  Text(
-                    'Verifikasi APK',
-                    style: poppins.copyWith(
-                        fontWeight: semiBold,
-                        fontSize: 16,
-                        color: const Color(0xFF186968)),
-                  ),
-                  const SizedBox(
-                    height: 9,
-                  ),
-                  Text(
-                    'TOTAL',
-                    style: poppins.copyWith(
-                        fontWeight: medium,
-                        fontSize: 12,
-                        color: const Color(0xFF808080)),
-                  ),
-                  Text(
-                    '50',
-                    style: poppins.copyWith(
-                        fontWeight: bold,
-                        fontSize: 16,
-                        color: const Color(0xFF232323)),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      HomeWidget1(title: 'Valid', value: 43),
-                      SizedBox(
-                        width: 30,
-                      ),
-                      HomeWidget1(title: 'Invalid', value: 7),
-                    ],
-                  ),
-                  const Spacer(),
-                  CustomButtonAdd(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const VerifikasiApkPage(),
-                        ),
-                      );
-                    },
-                  )
-                ],
-              ),
+                );
+              },
             ),
             const SizedBox(
               height: 27,
             ),
 
             //Verifikasi Kampanye
-            Container(
-              width: double.infinity,
-              height: 180,
-              margin: const EdgeInsets.symmetric(horizontal: 30),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [Color(0xFFD6EEEE), Colors.white],
-                ),
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFF000000).withOpacity(0.23),
-                    spreadRadius: 0,
-                    blurRadius: 3,
-                    offset: const Offset(0, 6),
+            CustomVerifikasi(
+              title: 'Verifikasi Kampanye',
+              countTotal: dashboardModel != null
+                  ? dashboardModel!.validasiKampanye.total.toString()
+                  : '',
+              countValid: dashboardModel != null
+                  ? dashboardModel!.validasiKampanye.valid.toString()
+                  : '',
+              countInvalid: dashboardModel != null
+                  ? dashboardModel!.validasiKampanye.invalid.toString()
+                  : '',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const VerifikasiKampanyePage(),
                   ),
-                ],
-              ),
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  Text(
-                    'Verifikasi Kampanye',
-                    style: poppins.copyWith(
-                        fontWeight: semiBold,
-                        fontSize: 16,
-                        color: const Color(0xFF186968)),
-                  ),
-                  const SizedBox(
-                    height: 9,
-                  ),
-                  Text(
-                    'TOTAL',
-                    style: poppins.copyWith(
-                        fontWeight: medium,
-                        fontSize: 12,
-                        color: const Color(0xFF808080)),
-                  ),
-                  Text(
-                    '50',
-                    style: poppins.copyWith(
-                        fontWeight: bold,
-                        fontSize: 16,
-                        color: const Color(0xFF232323)),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      HomeWidget1(title: 'Valid', value: 43),
-                      SizedBox(
-                        width: 30,
-                      ),
-                      HomeWidget1(title: 'Invalid', value: 7),
-                    ],
-                  ),
-                  const Spacer(),
-                  CustomButtonAdd(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const VerifikasiKampanyePage(),
-                        ),
-                      );
-                    },
-                  )
-                ],
-              ),
+                );
+              },
             ),
             const SizedBox(
               height: 27,
@@ -427,33 +291,129 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class HomeWidget1 extends StatelessWidget {
+class CustomVerifikasi extends StatelessWidget {
   final String title;
-  final int value;
-  const HomeWidget1({super.key, required this.title, required this.value});
+  final String countTotal;
+  final String countValid;
+  final String countInvalid;
+  final VoidCallback onPressed;
+  const CustomVerifikasi(
+      {super.key,
+      required this.title,
+      required this.countTotal,
+      required this.countValid,
+      required this.countInvalid,
+      required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          title,
-          style: poppins.copyWith(
-              fontWeight: medium, fontSize: 12, color: const Color(0xFF808080)),
+    return Container(
+      width: double.infinity,
+      height: 180,
+      margin: const EdgeInsets.symmetric(horizontal: 30),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFFD6EEEE), Colors.white],
         ),
-        Text(
-          value.toString(),
-          style: poppins.copyWith(
-              fontWeight: bold, fontSize: 12, color: const Color(0xFF232323)),
-        )
-      ],
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF000000).withOpacity(0.23),
+            spreadRadius: 0,
+            blurRadius: 3,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          const SizedBox(
+            height: 15,
+          ),
+          Text(
+            title,
+            style: poppins.copyWith(
+                fontWeight: semiBold,
+                fontSize: 16,
+                color: const Color(0xFF186968)),
+          ),
+          const SizedBox(
+            height: 9,
+          ),
+          Text(
+            'TOTAL',
+            style: poppins.copyWith(
+                fontWeight: medium,
+                fontSize: 12,
+                color: const Color(0xFF808080)),
+          ),
+          Text(
+            countTotal,
+            style: poppins.copyWith(
+                fontWeight: bold, fontSize: 16, color: const Color(0xFF232323)),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Column(
+                children: [
+                  Text(
+                    'Valid',
+                    style: poppins.copyWith(
+                        fontWeight: medium,
+                        fontSize: 12,
+                        color: const Color(0xFF808080)),
+                  ),
+                  Text(
+                    countValid,
+                    style: poppins.copyWith(
+                        fontWeight: bold,
+                        fontSize: 12,
+                        color: const Color(0xFF232323)),
+                  )
+                ],
+              ),
+              const SizedBox(
+                width: 30,
+              ),
+              Column(
+                children: [
+                  Text(
+                    'Invalid',
+                    style: poppins.copyWith(
+                        fontWeight: medium,
+                        fontSize: 12,
+                        color: const Color(0xFF808080)),
+                  ),
+                  Text(
+                    countInvalid,
+                    style: poppins.copyWith(
+                        fontWeight: bold,
+                        fontSize: 12,
+                        color: const Color(0xFF232323)),
+                  )
+                ],
+              ),
+            ],
+          ),
+          const Spacer(),
+          CustomButtonAdd(onPressed: onPressed)
+        ],
+      ),
     );
   }
 }
 
 class CustomButtonAdd extends StatelessWidget {
   final VoidCallback onPressed;
-  const CustomButtonAdd({super.key, required this.onPressed});
+  final String text;
+  const CustomButtonAdd(
+      {super.key, required this.onPressed, this.text = 'Tambah'});
 
   @override
   Widget build(BuildContext context) {
@@ -483,15 +443,17 @@ class CustomButtonAdd extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(
-            Icons.add_circle_outline,
-            size: 15,
+          Image.asset(
+            text == 'Tambah'
+                ? 'assets/ic_circle_plus.png'
+                : 'assets/ic_circle_arrow_r.png',
+            width: 15,
           ),
           const SizedBox(
             width: 5,
           ),
           Text(
-            'Tambah',
+            text,
             style: poppins.copyWith(
               color: Colors.white,
               fontSize: 12,
