@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:pica/models/api_response_model.dart';
 import 'package:pica/models/auth_model.dart';
@@ -28,8 +29,34 @@ class _LoginPageState extends State<LoginPage> {
       _saveAndRedirectToHome(response.data as AuthModel);
     } else {
       isLoading = false;
-      dialogFailedLogin(
-          'Email atau kata sandi anda salah! silahkan cek kembali');
+      // ignore: use_build_context_synchronously
+      Flushbar(
+        messageText: Row(
+          children: [
+            Image.asset(
+              'assets/ic_warning.png',
+              width: 13,
+            ),
+            const SizedBox(
+              width: 8,
+            ),
+            Expanded(
+              child: Text(
+                response.error!,
+                style: poppins.copyWith(
+                    fontSize: 12, fontWeight: medium, color: Colors.white),
+              ),
+            )
+          ],
+        ),
+        duration: const Duration(seconds: 3),
+        margin: const EdgeInsets.all(21),
+        padding: const EdgeInsets.all(10),
+        backgroundColor: const Color(0xFFFD4C4C),
+        borderRadius: BorderRadius.circular(8),
+        flushbarPosition: FlushbarPosition.TOP,
+        flushbarStyle: FlushbarStyle.FLOATING,
+      ).show(context);
     }
   }
 
@@ -40,6 +67,7 @@ class _LoginPageState extends State<LoginPage> {
     await preferences.setInt('userId', userModel.id);
     await preferences.setString('name', userModel.name);
     await preferences.setString('token', userModel.token);
+    await preferences.setString('role', userModel.role);
 
     if (isChecked) {
       await preferences.setString('emaillogin', emailController.text);
@@ -52,7 +80,12 @@ class _LoginPageState extends State<LoginPage> {
     // ignore: use_build_context_synchronously
     Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
+        MaterialPageRoute(
+          builder: (context) => HomePage(
+            role: userModel.role,
+            name: userModel.name,
+          ),
+        ),
         (route) => false);
   }
 
@@ -200,14 +233,6 @@ class _LoginPageState extends State<LoginPage> {
                               fontSize: 12,
                               fontWeight: medium),
                         ),
-                        const Spacer(),
-                        Text(
-                          'Forgot Password?',
-                          style: poppins.copyWith(
-                              fontSize: 12,
-                              fontWeight: semiBold,
-                              color: Color(0xFF186968)),
-                        )
                       ],
                     ),
                   ],
@@ -226,7 +251,35 @@ class _LoginPageState extends State<LoginPage> {
                       isLoading = true;
                       _loginUser();
                     } else {
-                      dialogFailedLogin('Lengkapi Email dan Kata Sandi');
+                      Flushbar(
+                        messageText: Row(
+                          children: [
+                            Image.asset(
+                              'assets/ic_warning.png',
+                              width: 13,
+                            ),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            Expanded(
+                              child: Text(
+                                "Lengkapi email dan password Anda",
+                                style: poppins.copyWith(
+                                    fontSize: 12,
+                                    fontWeight: medium,
+                                    color: Colors.white),
+                              ),
+                            )
+                          ],
+                        ),
+                        duration: const Duration(seconds: 3),
+                        margin: const EdgeInsets.all(21),
+                        padding: const EdgeInsets.all(10),
+                        backgroundColor: const Color(0xFFFD4C4C),
+                        borderRadius: BorderRadius.circular(8),
+                        flushbarPosition: FlushbarPosition.TOP,
+                        flushbarStyle: FlushbarStyle.FLOATING,
+                      ).show(context);
                     }
                   },
                   style: ButtonStyle(
@@ -268,65 +321,5 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
-  }
-
-  void dialogFailedLogin(String text) {
-    showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10.0))),
-            contentPadding: const EdgeInsets.all(0),
-            content: Container(
-              width: 290,
-              height: 130,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: neutral100,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Container(
-                        color: neutral100,
-                        margin: const EdgeInsets.all(10),
-                        child: Image.asset(
-                          'assets/ic_close_circle.png',
-                          width: 24,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: Text(
-                      'Anda tidak bisa masuk!',
-                      style: poppins.copyWith(
-                          fontWeight: semiBold,
-                          fontSize: 15,
-                          color: Colors.black),
-                    ),
-                  ),
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
-                    child: Text(
-                      text,
-                      style: poppins.copyWith(fontSize: 12, color: neutral600),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
   }
 }

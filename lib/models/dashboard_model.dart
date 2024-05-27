@@ -1,36 +1,108 @@
 class DashboardModel {
-  final ValidasiLogistik validasiLogistik;
-  final ValidasiMobile validasiMobile;
-  final ValidasiAPK validasiAPK;
-  final ValidasiKampanye validasiKampanye;
+  final Team team;
+  final VerifikasiAPK verifikasiAPK;
+  final VerifikasiKampanye verifikasiKampanye;
+  final VerifikasiMobile verifikasiMobile;
 
   DashboardModel({
-    required this.validasiLogistik,
-    required this.validasiMobile,
-    required this.validasiAPK,
-    required this.validasiKampanye,
+    required this.team,
+    required this.verifikasiAPK,
+    required this.verifikasiKampanye,
+    required this.verifikasiMobile,
   });
 
   factory DashboardModel.fromJson(Map<String, dynamic> json) {
     return DashboardModel(
-      validasiLogistik: ValidasiLogistik.fromJson(json['validasi_logistik']),
-      validasiMobile: ValidasiMobile.fromJson(json['validasi_mobile']),
-      validasiAPK: ValidasiAPK.fromJson(json['validasi_apk']),
-      validasiKampanye: ValidasiKampanye.fromJson(json['validasi_kampanye']),
+      team: Team.fromJson(json['team']),
+      verifikasiAPK: VerifikasiAPK.fromJson(json['verifikasi_apk']),
+      verifikasiKampanye:
+          VerifikasiKampanye.fromJson(json['verifikasi_kampanye']),
+      verifikasiMobile: VerifikasiMobile.fromJson(json['verifikasi_mobile']),
     );
   }
 }
 
-class ValidasiLogistik {
+class Team {
+  int? id;
+  String? name;
+  String? partai;
+  String? provinsi;
+  String? kabupaten;
+  String? calon;
+  String? status;
+  String? fotoAtas;
+  String? fotoBawah;
+  String? visi1;
+  String? visi2;
+  String? visi3;
+  String? visi4;
+  String? visi5;
+  String? misi1;
+  String? misi2;
+  String? misi3;
+  String? misi4;
+  String? misi5;
+  String? colorHex;
+
+  Team({
+    this.id,
+    this.name,
+    this.partai,
+    this.provinsi,
+    this.kabupaten,
+    this.calon,
+    this.status,
+    this.fotoAtas,
+    this.fotoBawah,
+    this.visi1,
+    this.visi2,
+    this.visi3,
+    this.visi4,
+    this.visi5,
+    this.misi1,
+    this.misi2,
+    this.misi3,
+    this.misi4,
+    this.misi5,
+    this.colorHex,
+  });
+
+  factory Team.fromJson(Map<String, dynamic> json) {
+    return Team(
+      id: json['team']['id'],
+      name: json['team']['name'],
+      partai: json['team']['partai'],
+      provinsi: json['team']['provinsi'],
+      kabupaten: json['team']['kabupaten'],
+      calon: json['team']['calon'],
+      status: json['team']['status'],
+      fotoAtas: json['fotoAtas'],
+      fotoBawah: json['fotoBawah'],
+      visi1: json['team']['visi1'],
+      visi2: json['team']['visi2'],
+      visi3: json['team']['visi3'],
+      visi4: json['team']['visi4'],
+      visi5: json['team']['visi5'],
+      misi1: json['team']['misi1'],
+      misi2: json['team']['misi2'],
+      misi3: json['team']['misi3'],
+      misi4: json['team']['misi4'],
+      misi5: json['team']['misi5'],
+      colorHex: json['team']['colorHex'],
+    );
+  }
+}
+
+class VerifikasiAPK {
   final int total;
   final int valid;
   final int invalid;
 
-  ValidasiLogistik(
+  VerifikasiAPK(
       {required this.total, required this.valid, required this.invalid});
 
-  factory ValidasiLogistik.fromJson(Map<String, dynamic> json) {
-    return ValidasiLogistik(
+  factory VerifikasiAPK.fromJson(Map<String, dynamic> json) {
+    return VerifikasiAPK(
       total: json['total'],
       valid: json['valid'],
       invalid: json['invalid'],
@@ -38,16 +110,16 @@ class ValidasiLogistik {
   }
 }
 
-class ValidasiMobile {
+class VerifikasiKampanye {
   final int total;
   final int valid;
   final int invalid;
 
-  ValidasiMobile(
+  VerifikasiKampanye(
       {required this.total, required this.valid, required this.invalid});
 
-  factory ValidasiMobile.fromJson(Map<String, dynamic> json) {
-    return ValidasiMobile(
+  factory VerifikasiKampanye.fromJson(Map<String, dynamic> json) {
+    return VerifikasiKampanye(
       total: json['total'],
       valid: json['valid'],
       invalid: json['invalid'],
@@ -55,33 +127,16 @@ class ValidasiMobile {
   }
 }
 
-class ValidasiAPK {
+class VerifikasiMobile {
   final int total;
   final int valid;
   final int invalid;
 
-  ValidasiAPK(
+  VerifikasiMobile(
       {required this.total, required this.valid, required this.invalid});
 
-  factory ValidasiAPK.fromJson(Map<String, dynamic> json) {
-    return ValidasiAPK(
-      total: json['total'],
-      valid: json['valid'],
-      invalid: json['invalid'],
-    );
-  }
-}
-
-class ValidasiKampanye {
-  final int total;
-  final int valid;
-  final int invalid;
-
-  ValidasiKampanye(
-      {required this.total, required this.valid, required this.invalid});
-
-  factory ValidasiKampanye.fromJson(Map<String, dynamic> json) {
-    return ValidasiKampanye(
+  factory VerifikasiMobile.fromJson(Map<String, dynamic> json) {
+    return VerifikasiMobile(
       total: json['total'],
       valid: json['valid'],
       invalid: json['invalid'],

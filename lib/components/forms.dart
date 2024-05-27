@@ -6,6 +6,7 @@ class OutlineFormField extends StatelessWidget {
   final String title;
   final String placeholderText;
   final bool numberOnly;
+  final bool readOnly;
   final TextEditingController controller;
 
   const OutlineFormField({
@@ -13,6 +14,7 @@ class OutlineFormField extends StatelessWidget {
     this.title = '',
     required this.placeholderText,
     this.numberOnly = false,
+    this.readOnly = false,
     required this.controller,
   });
 
@@ -60,6 +62,7 @@ class OutlineFormField extends StatelessWidget {
             child: TextFormField(
               controller: controller,
               keyboardType: numberOnly ? TextInputType.number : null,
+              readOnly: readOnly,
               style: poppins.copyWith(
                   fontSize: 12, color: const Color(0xFF232323)),
               decoration: InputDecoration(

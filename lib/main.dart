@@ -1,25 +1,51 @@
 import 'package:flutter/material.dart';
-import 'package:pica/shared/theme.dart';
-import 'package:pica/ui/check_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:pica/services/auth_service.dart';
+import 'package:pica/shared/theme.dart';
+import 'package:pica/ui/auth/login_page.dart';
+import 'package:pica/ui/home/home_page.dart';
+import 'package:pica/ui/onboarding.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   Intl.defaultLocale = 'id';
-  runApp(const MyApp());
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
+  String name = await getName();
+  Widget startWidget;
+  if (isFirstTime) {
+    startWidget = const OnboardingPage();
+  } else {
+    String token = await getToken();
+    if (token == '') {
+      startWidget = const LoginPage();
+    } else {
+      String role = await getRole();
+      startWidget = HomePage(
+        role: role,
+        name: name,
+      );
+    }
+  }
+  runApp(MyApp(
+    startWidget: startWidget,
+  ));
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+class MyApp extends StatelessWidget {
+  final Widget startWidget;
 
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
+  const MyApp({Key? key, required this.startWidget}) : super(key: key);
 
-class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
     return MaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
@@ -40,8 +66,8 @@ class _MyAppState extends State<MyApp> {
             selectionHandleColor: Color(0xFF186968)),
         useMaterial3: true,
       ),
+      home: startWidget,
       localizationsDelegates: const [
-        // ...delegasi lokal lainnya
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
@@ -49,7 +75,6 @@ class _MyAppState extends State<MyApp> {
         Locale('en', 'US'),
         Locale('id', 'ID'),
       ],
-      home: const CheckAuth(),
     );
   }
 }

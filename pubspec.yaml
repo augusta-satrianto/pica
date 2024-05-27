@@ -28,19 +28,21 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  another_flushbar: ^1.12.30
   cupertino_icons: ^1.0.2
   dropdown_button2: ^2.3.9
-  file_picker: ^6.2.0
   flutter:
     sdk: flutter
-  flutter_exif_rotation: ^0.5.1
+  flutter_launcher_icons: ^0.13.1
   flutter_localization: ^0.2.0
   geocoding: ^3.0.0
+  gps_connectivity: ^0.0.4
   http: ^1.1.0
   image: ^4.1.7
-  image_gallery_saver: ^2.0.3
   image_picker: ^1.0.7
+  internet_connection_checker: ^1.0.0+1
   intl: ^0.18.1
+  path: ^1.8.3
   path_provider: ^2.1.2
   permission_handler: ^11.0.1
   shared_preferences: ^2.2.2
@@ -51,6 +53,13 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/app_icon.png"
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/app_icon_foreground.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -68,8 +77,6 @@ flutter:
   fonts:
     - family: Poppins
       fonts:
-        - asset: assets/Poppins/Poppins-Light.ttf
-          weight: 300
         - asset: assets/Poppins/Poppins-Regular.ttf
           weight: 400
         - asset: assets/Poppins/Poppins-Medium.ttf

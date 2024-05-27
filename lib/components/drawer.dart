@@ -2,19 +2,41 @@ import 'package:flutter/material.dart';
 import 'package:pica/services/auth_service.dart';
 import 'package:pica/shared/theme.dart';
 import 'package:pica/ui/auth/login_page.dart';
-import 'package:pica/ui/home/comp/verifikasi_apk_page.dart';
-import 'package:pica/ui/home/comp/verifikasi_kampanye_page.dart';
-import 'package:pica/ui/home/comp/verifikasi_logistik_page.dart';
-import 'package:pica/ui/home/comp/verifikasi_mobile_page.dart';
+import 'package:pica/ui/home/comp/quick_count_page.dart';
+import 'package:pica/ui/verifikasi_apk/verifikasi_apk_page.dart';
 import 'package:pica/ui/home/home_page.dart';
+import 'package:pica/ui/verifikasi_mobile/verifikasi_mobile_page.dart';
 
-class DrawerView extends StatelessWidget {
+class DrawerView extends StatefulWidget {
   final String pageActive;
-  const DrawerView({super.key, required this.pageActive});
+  final String role;
+  const DrawerView({
+    super.key,
+    required this.pageActive,
+    required this.role,
+  });
+
+  @override
+  State<DrawerView> createState() => _DrawerViewState();
+}
+
+class _DrawerViewState extends State<DrawerView> {
+  String name = '';
+  _getPrev() async {
+    name = await getName();
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    _getPrev();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     double paddingTop = MediaQuery.of(context).padding.top;
+
     return Drawer(
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.zero,
@@ -44,19 +66,16 @@ class DrawerView extends StatelessWidget {
                     width: 71.19,
                     height: 70,
                     margin: EdgeInsets.only(top: 20 + paddingTop, bottom: 5),
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         shape: BoxShape.circle,
-                        border: Border.all(
-                          color: const Color(0xFFD9D9D9),
-                        ),
-                        image: const DecorationImage(
+                        image: DecorationImage(
                             image: AssetImage(
                               'assets/img_profile.png',
                             ),
                             fit: BoxFit.cover)),
                   ),
                   Text(
-                    'Lorem Ipsum',
+                    name,
                     style: poppins.copyWith(
                         fontWeight: bold, fontSize: 16, color: Colors.white),
                   )
@@ -68,114 +87,143 @@ class DrawerView extends StatelessWidget {
                 const SizedBox(
                   height: 14,
                 ),
+                // Home
                 CustomMenuDrawer(
                   urlIcon: 'assets/ic_home.png',
                   title: 'Home',
                   onPressed: () {
-                    pageActive == 'home'
+                    widget.pageActive == 'home'
                         ? Navigator.pop(context)
                         : Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const HomePage(),
+                              builder: (context) => HomePage(
+                                role: widget.role,
+                                name: name,
+                              ),
                             ),
                             (route) => false);
                   },
                 ),
-                CustomMenuDrawer(
-                  urlIcon: 'assets/ic_logistik.png',
-                  title: 'Verifikasi Logistik',
-                  onPressed: () {
-                    Navigator.pop(context);
-                    if (pageActive == 'logistik upload') {
-                      Navigator.pop(context);
+                // Verifikasi APK
+                ['koordes', 'koortps', 'relawan'].contains(widget.role)
+                    ? CustomMenuDrawer(
+                        urlIcon: 'assets/ic_apk.png',
+                        title: 'Verifikasi APK',
+                        onPressed: () {
+                          Navigator.pop(context);
+                          if (widget.pageActive != 'apk' ||
+                              widget.pageActive == 'validapk') {
+                            if (widget.pageActive != 'home' ||
+                                widget.pageActive == 'validapk') {
+                              Navigator.pop(context);
+                            }
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => VerifikasiApkPage(
+                                  role: widget.role,
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                      )
+                    : Container(),
 
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const VerifikasiLogistikPage(),
-                        ),
-                      );
-                    }
-                    if (pageActive != 'logistik' &&
-                        pageActive != 'logistik upload') {
-                      if (pageActive != 'home') {
-                        Navigator.pop(context);
-                      }
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const VerifikasiLogistikPage(),
-                        ),
-                      );
-                    }
-                  },
-                ),
+                // Verifikasi Kampanye
+                ['koordes', 'koortps', 'relawan'].contains(widget.role)
+                    ? CustomMenuDrawer(
+                        urlIcon: 'assets/ic_kampanye.png',
+                        title: 'Verifikasi Kampanye',
+                        onPressed: () {
+                          Navigator.pop(context);
+                          if (widget.pageActive != 'kampanye' ||
+                              widget.pageActive == 'validkampanye') {
+                            if (widget.pageActive != 'home' ||
+                                widget.pageActive == 'validkampanye') {
+                              Navigator.pop(context);
+                            }
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => VerifikasiApkPage(
+                                  role: widget.role,
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                      )
+                    : Container(),
+
+                // Verifikasi Mobile
+                ['koordes', 'koortps', 'relawan'].contains(widget.role)
+                    ? CustomMenuDrawer(
+                        urlIcon: 'assets/ic_mobile.png',
+                        title: 'Verifikasi Mobile',
+                        onPressed: () {
+                          Navigator.pop(context);
+                          if (widget.pageActive != 'mobile' ||
+                              widget.pageActive == 'validmobile') {
+                            if (widget.pageActive != 'home' ||
+                                widget.pageActive == 'validmobile') {
+                              Navigator.pop(context);
+                            }
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => VerifikasiMobilePage(
+                                  role: widget.role,
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                      )
+                    : Container(),
                 CustomMenuDrawer(
-                  urlIcon: 'assets/ic_mobile.png',
-                  title: 'Verifikasi Mobile',
+                  urlIcon: 'assets/ic_quick.png',
+                  title: 'Quick Count',
                   onPressed: () {
                     Navigator.pop(context);
-                    if (pageActive != 'mobile') {
-                      if (pageActive != 'home') {
-                        Navigator.pop(context);
-                      }
-                      if (pageActive == 'logistik upload') {
+                    if (widget.pageActive != 'quick') {
+                      if (widget.pageActive != 'home') {
                         Navigator.pop(context);
                       }
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const VerifikasiMobilePage(),
+                          builder: (context) => QuickCountPage(
+                            role: widget.role,
+                          ),
                         ),
                       );
                     }
                   },
                 ),
+                // CustomMenuDrawer(
+                //   urlIcon: 'assets/ic_real.png',
+                //   title: 'Real Count',
+                //   onPressed: () {
+                //     Navigator.pop(context);
+                //     if (widget.pageActive != 'real') {
+                //       if (widget.pageActive != 'home') {
+                //         Navigator.pop(context);
+                //       }
+                //       Navigator.push(
+                //         context,
+                //         MaterialPageRoute(
+                //           builder: (context) => QuickCountPage(
+                //             role: widget.role,
+                //           ),
+                //         ),
+                //       );
+                //     }
+                //   },
+                // ),
                 CustomMenuDrawer(
-                  urlIcon: 'assets/ic_apk.png',
-                  title: 'Verifikasi APK',
-                  onPressed: () {
-                    Navigator.pop(context);
-                    if (pageActive != 'apk') {
-                      if (pageActive != 'home') {
-                        Navigator.pop(context);
-                      }
-                      if (pageActive == 'logistik upload') {
-                        Navigator.pop(context);
-                      }
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const VerifikasiApkPage(),
-                        ),
-                      );
-                    }
-                  },
-                ),
-                CustomMenuDrawer(
-                  urlIcon: 'assets/ic_kampanye.png',
-                  title: 'Verifikasi Kampanye',
-                  onPressed: () {
-                    Navigator.pop(context);
-                    if (pageActive != 'kampanye') {
-                      if (pageActive != 'home') {
-                        Navigator.pop(context);
-                      }
-                      if (pageActive == 'logistik upload') {
-                        Navigator.pop(context);
-                      }
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const VerifikasiKampanyePage(),
-                        ),
-                      );
-                    }
-                  },
-                ),
-                CustomMenuDrawer(
-                  urlIcon: 'assets/ic_kampanye.png',
+                  urlIcon: 'assets/ic_logout.png',
                   title: 'Logout',
                   onPressed: () {
                     logout().then((value) => Navigator.pushAndRemoveUntil(
@@ -244,11 +292,11 @@ class CustomMenuDrawer extends StatelessWidget {
             height: 12,
           ),
           Padding(
-            padding: EdgeInsets.only(left: 50),
+            padding: const EdgeInsets.only(left: 50),
             child: Container(
               height: 1,
               width: double.infinity,
-              color: Color(0xFFEDEDED),
+              color: const Color(0xFFEDEDED),
             ),
           ),
         ],
