@@ -77,31 +77,17 @@ class _OnboardingPageState extends State<OnboardingPage> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           const Spacer(),
-                          Container(
-                            width: 181,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.3),
-                                  spreadRadius: 0,
-                                  blurRadius: 4,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
-                            ),
-                            child: Image.asset(
-                              'assets/img_user.png',
-                              width: 181,
-                            ),
+                          Image.asset(
+                            'assets/img_logo_circle.png',
+                            width: MediaQuery.of(context).size.width * 5 / 10,
                           ),
                           const SizedBox(
                             height: 26,
                           ),
                           Text(
-                            'Lorem Ipsum',
+                            'Mobile Application',
                             style: poppins.copyWith(
-                                fontSize: 30,
+                                fontSize: 24,
                                 fontWeight: semiBold,
                                 color: const Color(0xFF186968)),
                           ),

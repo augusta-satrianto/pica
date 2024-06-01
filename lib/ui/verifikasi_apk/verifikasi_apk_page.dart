@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pica/components/buttons.dart';
@@ -71,7 +72,6 @@ class _VerifikasiApkPageState extends State<VerifikasiApkPage> {
           latitude = result.latitude;
           longitude = result.longitude;
           isMock = result.isMockLocation;
-          setState(() {});
           geoCode();
         }
       });
@@ -89,7 +89,9 @@ class _VerifikasiApkPageState extends State<VerifikasiApkPage> {
     desa = placemark[0].subLocality;
     jalan = placemark[0].street;
     kodepos = placemark[0].postalCode;
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -126,11 +128,9 @@ class _VerifikasiApkPageState extends State<VerifikasiApkPage> {
         latitude: latitude!,
         longitude: longitude!,
         foto: foto);
-
+    // ignore: use_build_context_synchronously
+    Navigator.pop(context);
     if (response.error == null) {
-      setState(() {
-        isLoading = false;
-      });
       // ignore: use_build_context_synchronously
       customDialog('Berhasil', 'Verifikasi Berhasil Terkirim', 'Success', () {
         Navigator.pop(context);
@@ -141,9 +141,11 @@ class _VerifikasiApkPageState extends State<VerifikasiApkPage> {
       customDialog('Gagal', 'Coba kirim kembali', 'Failed', () {
         Navigator.pop(context);
       }, context);
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -177,14 +179,11 @@ class _VerifikasiApkPageState extends State<VerifikasiApkPage> {
     fixkodepos = kodepos;
     fixtanggal = formattedDate;
     fixjam = formattedTime;
-
-    setState(() {
-      selectedImage = image;
-    });
-    final bytes = await controller.capture();
-    setState(() {
-      this.bytes = bytes;
-    });
+    if (mounted) {
+      setState(() {
+        selectedImage = image;
+      });
+    }
   }
 
   @override
@@ -226,129 +225,173 @@ class _VerifikasiApkPageState extends State<VerifikasiApkPage> {
         pageActive: 'mobile',
         role: widget.role,
       ),
-      body: ListView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.symmetric(horizontal: 30),
+      body: Stack(
         children: [
-          const SizedBox(
-            height: 20,
-          ),
-          OutlineFormField(
-            title: 'NIK',
-            placeholderText: 'NIK',
-            controller: nikController,
-            numberOnly: true,
-          ),
-          OutlineFormField(
-            title: 'Alamat',
-            placeholderText: 'Alamat',
-            controller: alamatController,
-          ),
-          OutlineFormField(
-            title: 'Keterangan',
-            placeholderText: 'Keterangan',
-            controller: ketController,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          ListView(
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: 30),
             children: [
               const SizedBox(
-                height: 12,
+                height: 20,
               ),
-              Text(
-                'Upload Foto',
-                style: poppins.copyWith(
-                    fontWeight: semiBold, color: const Color(0xFF186968)),
+              OutlineFormField(
+                title: 'NIK',
+                placeholderText: 'NIK',
+                controller: nikController,
+                numberOnly: true,
               ),
-              const SizedBox(
-                height: 4,
+              OutlineFormField(
+                title: 'Alamat',
+                placeholderText: 'Alamat',
+                controller: alamatController,
               ),
-              GestureDetector(
-                onTap: () async {
-                  bool isGpsEnabled =
-                      await (GpsConnectivity().checkGpsConnectivity());
-                  bool isInternetEnabled =
-                      await InternetConnectionChecker().hasConnection;
-                  if (!isGpsEnabled && !isInternetEnabled) {
-                    // ignore: use_build_context_synchronously
-                    MyFlushbar.showFlushbar(
-                        context, "Aktifkan Koneksi Internet dan GPS");
-                  } else if (isGpsEnabled && !isInternetEnabled) {
-                    // ignore: use_build_context_synchronously
-                    MyFlushbar.showFlushbar(
-                        context, "Aktifkan Koneksi Internet");
-                  } else if (!isGpsEnabled && isInternetEnabled) {
-                    // ignore: use_build_context_synchronously
-                    MyFlushbar.showFlushbar(context, "Aktifkan Koneksi GPS");
-                  } else {
-                    if (isMock != null &&
-                        isMock == false &&
-                        latitude != null &&
-                        longitude != null) {
-                      _selectImage();
-                    }
-                  }
-                },
-                child: selectedImage == null
-                    ? Container(
-                        width: double.infinity,
-                        height: 73,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(
-                              color: const Color(0xFF808080),
-                            )),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              'assets/ic_image.png',
-                              width: 20,
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              'Upload Foto',
-                              style: poppins.copyWith(
-                                  fontSize: 12, color: const Color(0xFFB1B1B1)),
-                            )
-                          ],
-                        ),
-                      )
-                    : WidgetsToImage(
-                        controller: controller,
-                        child: cardWidget(name!),
-                      ),
+              OutlineFormField(
+                title: 'Keterangan',
+                placeholderText: 'Keterangan',
+                controller: ketController,
               ),
-              Padding(
-                  padding: const EdgeInsets.only(top: 50, bottom: 20),
-                  child: CustomElevatedButton(
-                      title: isLoading ? 'Proses' : 'Kirim',
-                      onPressed: () async {
-                        if (isLoading == false &&
-                            nikController.text.trim().isNotEmpty &&
-                            alamatController.text.trim().isNotEmpty &&
-                            ketController.text.trim().isNotEmpty &&
-                            selectedImage != null) {
-                          setState(() {
-                            isLoading = true;
-                          });
-
-                          final bytes = await controller.capture();
-                          setState(() {
-                            this.bytes = bytes;
-                          });
-                          String a = DateTime.now()
-                              .toString()
-                              .replaceAll(RegExp(r'[-:\s]'), '')
-                              .replaceAll('.', '');
-                          saveUint8ListAsPng(bytes!, a);
-                        } else {
-                          MyFlushbar.showFlushbar(
-                              context, "Lengkapi semua formulir");
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  Text(
+                    'Upload Foto',
+                    style: poppins.copyWith(
+                        fontWeight: semiBold, color: const Color(0xFF186968)),
+                  ),
+                  const SizedBox(
+                    height: 4,
+                  ),
+                  GestureDetector(
+                    onTap: () async {
+                      bool isGpsEnabled =
+                          await (GpsConnectivity().checkGpsConnectivity());
+                      bool isInternetEnabled =
+                          await InternetConnectionChecker().hasConnection;
+                      if (!isGpsEnabled && !isInternetEnabled) {
+                        // ignore: use_build_context_synchronously
+                        MyFlushbar.showFlushbar(
+                            context, "Aktifkan Koneksi Internet dan GPS");
+                      } else if (isGpsEnabled && !isInternetEnabled) {
+                        // ignore: use_build_context_synchronously
+                        MyFlushbar.showFlushbar(
+                            context, "Aktifkan Koneksi Internet");
+                      } else if (!isGpsEnabled && isInternetEnabled) {
+                        // ignore: use_build_context_synchronously
+                        MyFlushbar.showFlushbar(
+                            context, "Aktifkan Koneksi GPS");
+                      } else {
+                        if (isMock != null &&
+                            isMock == false &&
+                            latitude != null &&
+                            longitude != null) {
+                          _selectImage();
                         }
-                      })),
+                      }
+                    },
+                    child: selectedImage == null
+                        ? Container(
+                            width: double.infinity,
+                            height: 73,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(
+                                  color: const Color(0xFF808080),
+                                )),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  'assets/ic_image.png',
+                                  width: 20,
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  'Upload Foto',
+                                  style: poppins.copyWith(
+                                      fontSize: 12,
+                                      color: const Color(0xFFB1B1B1)),
+                                )
+                              ],
+                            ),
+                          )
+                        : WidgetsToImage(
+                            controller: controller,
+                            child: cardWidget(name!),
+                          ),
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.only(top: 50, bottom: 20),
+                      child: CustomElevatedButton(
+                          title: 'Kirim',
+                          onPressed: () async {
+                            if (nikController.text.trim().isNotEmpty &&
+                                alamatController.text.trim().isNotEmpty &&
+                                ketController.text.trim().isNotEmpty &&
+                                selectedImage != null) {
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext context) {
+                                  return WillPopScope(
+                                    onWillPop: () async => true,
+                                    child: Center(
+                                      child: Container(
+                                          height: 100,
+                                          width: 100,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(6),
+                                          ),
+                                          child: Stack(
+                                            children: [
+                                              Center(
+                                                  child: SizedBox(
+                                                      width: 60,
+                                                      height: 60,
+                                                      child:
+                                                          CircularProgressIndicator(
+                                                        color: primaryMain,
+                                                        strokeWidth: 6,
+                                                      ))),
+                                              Center(
+                                                child: Image.asset(
+                                                  'assets/img_logo2.png',
+                                                  width: 40,
+                                                ),
+                                              )
+                                            ],
+                                          )),
+                                    ),
+                                  );
+                                },
+                              );
+                              isLoading = true;
+                              final bytes = await controller.capture();
+                              if (mounted) {
+                                setState(() {
+                                  this.bytes = bytes;
+                                });
+                              }
+                              ;
+                              String a = DateTime.now()
+                                  .toString()
+                                  .replaceAll(RegExp(r'[-:\s]'), '')
+                                  .replaceAll('.', '');
+
+                              saveUint8ListAsPng(bytes!, a);
+                            } else {
+                              MyFlushbar.showFlushbar(
+                                  context, "Lengkapi semua formulir");
+                            }
+                          })),
+                ],
+              ),
             ],
           ),
         ],

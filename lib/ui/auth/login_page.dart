@@ -116,206 +116,230 @@ class _LoginPageState extends State<LoginPage> {
       body: SingleChildScrollView(
         child: SizedBox(
           height: mediaQueryHeight,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+          child: Stack(
             children: [
-              Align(
-                alignment: Alignment.topLeft,
-                child: Image.asset(
-                  'assets/img_splash_u.png',
-                  width: 180,
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    'assets/img_logo.png',
-                    width: MediaQuery.of(context).size.width * 7 / 10,
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Image.asset(
+                      'assets/img_splash_u.png',
+                      width: 180,
+                    ),
                   ),
-                ],
-              ),
-              const SizedBox(
-                height: 40,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextFormField(
-                      controller: emailController,
-                      style: poppins.copyWith(
-                          fontSize: 16,
-                          fontWeight: medium,
-                          color: const Color(0xFF808080)),
-                      decoration: InputDecoration(
-                        hintText: 'Email',
-                        hintStyle: poppins.copyWith(
-                            fontSize: 16,
-                            fontWeight: medium,
-                            color: const Color(0xFF808080)),
-                        suffixIcon: Padding(
-                          padding: const EdgeInsets.all(13.0),
-                          child: Image.asset(
-                            'assets/ic_user.png',
-                            width: 20,
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/img_logo.png',
+                        width: MediaQuery.of(context).size.width * 7 / 10,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextFormField(
+                          controller: emailController,
+                          style: poppins.copyWith(
+                              fontSize: 16,
+                              fontWeight: medium,
+                              color: const Color(0xFF808080)),
+                          decoration: InputDecoration(
+                            hintText: 'Email',
+                            hintStyle: poppins.copyWith(
+                                fontSize: 16,
+                                fontWeight: medium,
+                                color: const Color(0xFF808080)),
+                            suffixIcon: Padding(
+                              padding: const EdgeInsets.all(13.0),
+                              child: Image.asset(
+                                'assets/ic_user.png',
+                                width: 20,
+                              ),
+                            ),
+                            enabledBorder: const UnderlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFF808080)),
+                            ),
+                            focusedBorder: const UnderlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFF808080)),
+                            ),
                           ),
                         ),
-                        enabledBorder: const UnderlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF808080)),
+                        const SizedBox(
+                          height: 14,
                         ),
-                        focusedBorder: const UnderlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF808080)),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 14,
-                    ),
-                    TextFormField(
-                      controller: passwordController,
-                      obscureText: isObscure,
-                      style: poppins.copyWith(
-                          fontSize: 16,
-                          fontWeight: medium,
-                          color: const Color(0xFF808080)),
-                      decoration: InputDecoration(
-                        hintText: 'Password',
-                        hintStyle: poppins.copyWith(
-                            fontSize: 16,
-                            fontWeight: medium,
-                            color: const Color(0xFF808080)),
-                        enabledBorder: const UnderlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF808080)),
-                        ),
-                        focusedBorder: const UnderlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF808080)),
-                        ),
-                        suffixIcon: IconButton(
-                            icon: Icon(isObscure
-                                ? Icons.visibility_off
-                                : Icons.visibility),
-                            color: const Color(0xFF808080),
-                            onPressed: () {
-                              setState(() {
-                                isObscure = !isObscure;
-                              });
-                            }),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 14,
-                    ),
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: 20,
-                          child: Checkbox(
-                              value: isChecked,
-                              activeColor: const Color(0xFF186968),
-                              side: const BorderSide(color: Color(0xFFC1C2C4)),
-                              onChanged: (value) {
-                                isChecked = !isChecked;
-                                setState(() {});
-                              }),
+                        TextFormField(
+                          controller: passwordController,
+                          obscureText: isObscure,
+                          style: poppins.copyWith(
+                              fontSize: 16,
+                              fontWeight: medium,
+                              color: const Color(0xFF808080)),
+                          decoration: InputDecoration(
+                            hintText: 'Password',
+                            hintStyle: poppins.copyWith(
+                                fontSize: 16,
+                                fontWeight: medium,
+                                color: const Color(0xFF808080)),
+                            enabledBorder: const UnderlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFF808080)),
+                            ),
+                            focusedBorder: const UnderlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFF808080)),
+                            ),
+                            suffixIcon: IconButton(
+                                icon: Icon(isObscure
+                                    ? Icons.visibility_off
+                                    : Icons.visibility),
+                                color: const Color(0xFF808080),
+                                onPressed: () {
+                                  setState(() {
+                                    isObscure = !isObscure;
+                                  });
+                                }),
+                          ),
                         ),
                         const SizedBox(
-                          width: 8,
+                          height: 14,
                         ),
-                        Text(
-                          'Remember Me',
-                          style: poppins.copyWith(
-                              color: const Color(0xFF808080),
-                              fontSize: 12,
-                              fontWeight: medium),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              const Spacer(),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                ),
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (emailController.text.trim().isNotEmpty &&
-                        passwordController.text.trim().isNotEmpty &&
-                        !isLoading) {
-                      isLoading = true;
-                      _loginUser();
-                    } else {
-                      Flushbar(
-                        messageText: Row(
+                        Row(
                           children: [
-                            Image.asset(
-                              'assets/ic_warning.png',
-                              width: 13,
+                            SizedBox(
+                              width: 20,
+                              child: Checkbox(
+                                  value: isChecked,
+                                  activeColor: const Color(0xFF186968),
+                                  side: const BorderSide(
+                                      color: Color(0xFFC1C2C4)),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      isChecked = !isChecked;
+                                    });
+                                  }),
                             ),
                             const SizedBox(
                               width: 8,
                             ),
-                            Expanded(
-                              child: Text(
-                                "Lengkapi email dan password Anda",
-                                style: poppins.copyWith(
-                                    fontSize: 12,
-                                    fontWeight: medium,
-                                    color: Colors.white),
-                              ),
-                            )
+                            Text(
+                              'Remember Me',
+                              style: poppins.copyWith(
+                                  color: const Color(0xFF808080),
+                                  fontSize: 12,
+                                  fontWeight: medium),
+                            ),
                           ],
                         ),
-                        duration: const Duration(seconds: 3),
-                        margin: const EdgeInsets.all(21),
-                        padding: const EdgeInsets.all(10),
-                        backgroundColor: const Color(0xFFFD4C4C),
-                        borderRadius: BorderRadius.circular(8),
-                        flushbarPosition: FlushbarPosition.TOP,
-                        flushbarStyle: FlushbarStyle.FLOATING,
-                      ).show(context);
-                    }
-                  },
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(primaryMain),
-                    foregroundColor:
-                        MaterialStateProperty.all<Color>(Colors.white),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
+                      ],
                     ),
-                    shadowColor: MaterialStateProperty.all<Color>(
-                      const Color.fromRGBO(0, 0, 0, 1),
-                    ),
-                    elevation: MaterialStateProperty.all<double>(4),
-                    minimumSize: MaterialStateProperty.all<Size>(
-                        const Size(double.infinity, 47)),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Login',
-                        style: poppins.copyWith(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: semiBold),
+                  const Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                    ),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (emailController.text.trim().isNotEmpty &&
+                            passwordController.text.trim().isNotEmpty &&
+                            !isLoading) {
+                          isLoading = true;
+                          _loginUser();
+                        } else {
+                          Flushbar(
+                            messageText: Row(
+                              children: [
+                                Image.asset(
+                                  'assets/ic_warning.png',
+                                  width: 13,
+                                ),
+                                const SizedBox(
+                                  width: 8,
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    "Lengkapi email dan password Anda",
+                                    style: poppins.copyWith(
+                                        fontSize: 12,
+                                        fontWeight: medium,
+                                        color: Colors.white),
+                                  ),
+                                )
+                              ],
+                            ),
+                            duration: const Duration(seconds: 3),
+                            margin: const EdgeInsets.all(21),
+                            padding: const EdgeInsets.all(10),
+                            backgroundColor: const Color(0xFFFD4C4C),
+                            borderRadius: BorderRadius.circular(8),
+                            flushbarPosition: FlushbarPosition.TOP,
+                            flushbarStyle: FlushbarStyle.FLOATING,
+                          ).show(context);
+                        }
+                      },
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(primaryMain),
+                        foregroundColor:
+                            MaterialStateProperty.all<Color>(Colors.white),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                        shadowColor: MaterialStateProperty.all<Color>(
+                          const Color.fromRGBO(0, 0, 0, 1),
+                        ),
+                        elevation: MaterialStateProperty.all<double>(4),
+                        minimumSize: MaterialStateProperty.all<Size>(
+                            const Size(double.infinity, 47)),
                       ),
-                    ],
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Login',
+                            style: poppins.copyWith(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: semiBold),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 75,
+                  ),
+                ],
+              ),
+              if (isLoading)
+                Container(
+                  color: Colors.black.withOpacity(0.6),
+                  child: Center(
+                    child: Container(
+                      height: 100,
+                      width: 100,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(6)),
+                      child: Center(
+                          child: CircularProgressIndicator(
+                        color: primaryMain,
+                      )),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(
-                height: 75,
-              ),
             ],
           ),
         ),

@@ -33,14 +33,16 @@ class _HomePageState extends State<HomePage> {
     ApiResponse response = await getDashboard();
     if (response.error == null) {
       dashboardModel = response.data as DashboardModel;
-      setState(() {});
-      await Future.delayed(const Duration(milliseconds: 5000));
-      isFirst = true;
+      if (mounted) {
+        setState(() {});
+      }
+      await Future.delayed(const Duration(milliseconds: 3000));
+      isFirst = false;
       _getDashboard();
     } else {
       if (isFirst) {
         isFirst = false;
-        await Future.delayed(const Duration(milliseconds: 2000));
+        await Future.delayed(const Duration(milliseconds: 3000));
         if (mounted) {
           Flushbar(
             messageText: Row(
@@ -127,18 +129,31 @@ class _HomePageState extends State<HomePage> {
                             ),
                           );
                         }),
-                        Container(
-                          width: 45.76,
-                          height: 45,
-                          margin: const EdgeInsets.only(right: 10),
-                          decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                  image: AssetImage(
-                                    'assets/img_profile.png',
-                                  ),
-                                  fit: BoxFit.cover)),
-                        ),
+                        dashboardModel == null ||
+                                dashboardModel!.team.fotoAtas == null
+                            ? Container(
+                                width: 45.76,
+                                height: 45,
+                                margin: const EdgeInsets.only(right: 10),
+                                decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                        image: AssetImage(
+                                          'assets/img_profile.png',
+                                        ),
+                                        fit: BoxFit.cover)),
+                              )
+                            : Container(
+                                width: 45.76,
+                                height: 45,
+                                margin: const EdgeInsets.only(right: 10),
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                        image: NetworkImage(
+                                            dashboardModel!.team.fotoAtas!),
+                                        fit: BoxFit.cover)),
+                              ),
                       ],
                     ),
                   ),
@@ -231,74 +246,18 @@ class _HomePageState extends State<HomePage> {
                             fontWeight: medium,
                             color: const Color(0xFF404040)),
                       ),
-                      Column(
-                        children: List.generate(5, (index) {
-                          if (dashboardModel != null) {
-                            if (index == 0 &&
-                                dashboardModel!.team.visi1 != null) {
-                              return Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    margin:
-                                        const EdgeInsets.only(right: 7, top: 6),
-                                    height: 2.5,
-                                    width: 2.5,
-                                    decoration: const BoxDecoration(
-                                        color: Color(0xFF808080),
-                                        shape: BoxShape.circle),
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      index == 0
-                                          ? dashboardModel!.team.visi1!
-                                          : index == 1
-                                              ? dashboardModel!.team.visi2!
-                                              : index == 2
-                                                  ? dashboardModel!.team.visi3!
-                                                  : index == 3
-                                                      ? dashboardModel!
-                                                          .team.visi4!
-                                                      : index == 4
-                                                          ? dashboardModel!
-                                                              .team.visi5!
-                                                          : '',
-                                      style: poppins.copyWith(
-                                          fontSize: 10,
-                                          color: const Color(0xFF808080)),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }
-                          }
-                          if (index == 0) {
-                            return Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  margin:
-                                      const EdgeInsets.only(right: 7, top: 6),
-                                  height: 2.5,
-                                  width: 2.5,
-                                  decoration: const BoxDecoration(
-                                      color: Color(0xFF808080),
-                                      shape: BoxShape.circle),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    'Lorem ipsum dolor sit ',
-                                    style: poppins.copyWith(
-                                        fontSize: 10,
-                                        color: const Color(0xFF808080)),
-                                  ),
-                                ),
-                              ],
-                            );
-                          }
-                          return Container();
-                        }),
-                      ),
+                      if (dashboardModel != null)
+                        Column(children: [
+                          CustomVisiMisi(text: dashboardModel!.team.visi1!),
+                          if (dashboardModel!.team.visi2 != null)
+                            CustomVisiMisi(text: dashboardModel!.team.visi2!),
+                          if (dashboardModel!.team.visi3 != null)
+                            CustomVisiMisi(text: dashboardModel!.team.visi3!),
+                          if (dashboardModel!.team.visi4 != null)
+                            CustomVisiMisi(text: dashboardModel!.team.visi3!),
+                          if (dashboardModel!.team.visi5 != null)
+                            CustomVisiMisi(text: dashboardModel!.team.visi3!),
+                        ]),
                       const SizedBox(
                         height: 10,
                       ),
@@ -309,74 +268,18 @@ class _HomePageState extends State<HomePage> {
                             fontWeight: medium,
                             color: const Color(0xFF404040)),
                       ),
-                      Column(
-                        children: List.generate(5, (index) {
-                          if (dashboardModel != null) {
-                            if (index == 0 &&
-                                dashboardModel!.team.misi1 != null) {
-                              return Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    margin:
-                                        const EdgeInsets.only(right: 7, top: 6),
-                                    height: 2.5,
-                                    width: 2.5,
-                                    decoration: const BoxDecoration(
-                                        color: Color(0xFF808080),
-                                        shape: BoxShape.circle),
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      index == 0
-                                          ? dashboardModel!.team.misi1!
-                                          : index == 1
-                                              ? dashboardModel!.team.misi2!
-                                              : index == 2
-                                                  ? dashboardModel!.team.misi3!
-                                                  : index == 3
-                                                      ? dashboardModel!
-                                                          .team.misi4!
-                                                      : index == 4
-                                                          ? dashboardModel!
-                                                              .team.misi5!
-                                                          : '',
-                                      style: poppins.copyWith(
-                                          fontSize: 10,
-                                          color: const Color(0xFF808080)),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }
-                          }
-                          if (index == 0) {
-                            return Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  margin:
-                                      const EdgeInsets.only(right: 7, top: 6),
-                                  height: 2.5,
-                                  width: 2.5,
-                                  decoration: const BoxDecoration(
-                                      color: Color(0xFF808080),
-                                      shape: BoxShape.circle),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    'Lorem ipsum dolor sit ',
-                                    style: poppins.copyWith(
-                                        fontSize: 10,
-                                        color: const Color(0xFF808080)),
-                                  ),
-                                ),
-                              ],
-                            );
-                          }
-                          return Container();
-                        }),
-                      ),
+                      if (dashboardModel != null)
+                        Column(children: [
+                          CustomVisiMisi(text: dashboardModel!.team.misi1!),
+                          if (dashboardModel!.team.misi2 != null)
+                            CustomVisiMisi(text: dashboardModel!.team.misi2!),
+                          if (dashboardModel!.team.misi3 != null)
+                            CustomVisiMisi(text: dashboardModel!.team.misi3!),
+                          if (dashboardModel!.team.misi4 != null)
+                            CustomVisiMisi(text: dashboardModel!.team.misi3!),
+                          if (dashboardModel!.team.misi5 != null)
+                            CustomVisiMisi(text: dashboardModel!.team.misi3!),
+                        ]),
                       const SizedBox(
                         height: 10,
                       ),
@@ -386,29 +289,99 @@ class _HomePageState extends State<HomePage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      width: 93,
-                      height: 93,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: const DecorationImage(
-                            image: AssetImage(
-                              'assets/img_profile2.png',
+                    dashboardModel == null ||
+                            dashboardModel!.team.fotoBawah == null
+                        ? Container(
+                            width: 93,
+                            height: 93,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: const DecorationImage(
+                                  image: AssetImage(
+                                    'assets/img_profile2.png',
+                                  ),
+                                  fit: BoxFit.cover),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.3),
+                                  spreadRadius: 0,
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
                             ),
-                            fit: BoxFit.cover),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.3),
-                            spreadRadius: 0,
-                            blurRadius: 4,
-                            offset: const Offset(0, 4),
+                          )
+                        : Container(
+                            width: 93,
+                            height: 93,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                  image: NetworkImage(
+                                      dashboardModel!.team.fotoBawah!),
+                                  fit: BoxFit.cover),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.3),
+                                  spreadRadius: 0,
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
                           ),
-                        ],
-                      ),
-                    ),
                   ],
                 ),
               ],
+            ),
+
+            //Verifikasi Mobile
+            ['koordes', 'koortps', 'relawan'].contains(widget.role)
+                ? CustomVerifikasi(
+                    title: 'Verifikasi Mobile',
+                    countTotal: dashboardModel != null
+                        ? dashboardModel!.verifikasiMobile.total.toString()
+                        : '-',
+                    countValid: dashboardModel != null
+                        ? dashboardModel!.verifikasiMobile.valid.toString()
+                        : '-',
+                    countInvalid: dashboardModel != null
+                        ? dashboardModel!.verifikasiMobile.invalid.toString()
+                        : '-',
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => VerifikasiMobilePage(
+                            role: widget.role,
+                          ),
+                        ),
+                      );
+                    },
+                    onPressedValid: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ValidMobilePage(
+                            role: widget.role,
+                          ),
+                        ),
+                      );
+                    },
+                    onPressedInvalid: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => InvalidMobilePage(
+                            role: widget.role,
+                          ),
+                        ),
+                      );
+                    },
+                  )
+                : Container(),
+            const SizedBox(
+              height: 27,
             ),
 
             //Verifikasi APK
@@ -509,55 +482,6 @@ class _HomePageState extends State<HomePage> {
               height: 27,
             ),
 
-            //Verifikasi Mobile
-            ['koordes', 'koortps', 'relawan'].contains(widget.role)
-                ? CustomVerifikasi(
-                    title: 'Verifikasi Mobile',
-                    countTotal: dashboardModel != null
-                        ? dashboardModel!.verifikasiMobile.total.toString()
-                        : '-',
-                    countValid: dashboardModel != null
-                        ? dashboardModel!.verifikasiMobile.valid.toString()
-                        : '-',
-                    countInvalid: dashboardModel != null
-                        ? dashboardModel!.verifikasiMobile.invalid.toString()
-                        : '-',
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => VerifikasiMobilePage(
-                            role: widget.role,
-                          ),
-                        ),
-                      );
-                    },
-                    onPressedValid: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ValidMobilePage(
-                            role: widget.role,
-                          ),
-                        ),
-                      );
-                    },
-                    onPressedInvalid: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => InvalidMobilePage(
-                            role: widget.role,
-                          ),
-                        ),
-                      );
-                    },
-                  )
-                : Container(),
-            const SizedBox(
-              height: 27,
-            ),
-
             //Quick Count
             CustomCount(
               title: 'Quick Count',
@@ -596,6 +520,34 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class CustomVisiMisi extends StatelessWidget {
+  final String text;
+  const CustomVisiMisi({super.key, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          margin: const EdgeInsets.only(right: 7, top: 6),
+          height: 2.5,
+          width: 2.5,
+          decoration: const BoxDecoration(
+              color: Color(0xFF808080), shape: BoxShape.circle),
+        ),
+        Expanded(
+          child: Text(
+            text,
+            style:
+                poppins.copyWith(fontSize: 10, color: const Color(0xFF808080)),
+          ),
+        ),
+      ],
     );
   }
 }

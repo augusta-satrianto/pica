@@ -24,7 +24,9 @@ class _DrawerViewState extends State<DrawerView> {
   String name = '';
   _getPrev() async {
     name = await getName();
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -105,6 +107,33 @@ class _DrawerViewState extends State<DrawerView> {
                             (route) => false);
                   },
                 ),
+
+                // Verifikasi Mobile
+                ['koordes', 'koortps', 'relawan'].contains(widget.role)
+                    ? CustomMenuDrawer(
+                        urlIcon: 'assets/ic_mobile.png',
+                        title: 'Verifikasi Mobile',
+                        onPressed: () {
+                          Navigator.pop(context);
+                          if (widget.pageActive != 'mobile' ||
+                              widget.pageActive == 'validmobile') {
+                            if (widget.pageActive != 'home' ||
+                                widget.pageActive == 'validmobile') {
+                              Navigator.pop(context);
+                            }
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => VerifikasiMobilePage(
+                                  role: widget.role,
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                      )
+                    : Container(),
+
                 // Verifikasi APK
                 ['koordes', 'koortps', 'relawan'].contains(widget.role)
                     ? CustomMenuDrawer(
@@ -157,31 +186,6 @@ class _DrawerViewState extends State<DrawerView> {
                       )
                     : Container(),
 
-                // Verifikasi Mobile
-                ['koordes', 'koortps', 'relawan'].contains(widget.role)
-                    ? CustomMenuDrawer(
-                        urlIcon: 'assets/ic_mobile.png',
-                        title: 'Verifikasi Mobile',
-                        onPressed: () {
-                          Navigator.pop(context);
-                          if (widget.pageActive != 'mobile' ||
-                              widget.pageActive == 'validmobile') {
-                            if (widget.pageActive != 'home' ||
-                                widget.pageActive == 'validmobile') {
-                              Navigator.pop(context);
-                            }
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => VerifikasiMobilePage(
-                                  role: widget.role,
-                                ),
-                              ),
-                            );
-                          }
-                        },
-                      )
-                    : Container(),
                 CustomMenuDrawer(
                   urlIcon: 'assets/ic_quick.png',
                   title: 'Quick Count',

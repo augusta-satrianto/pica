@@ -71,7 +71,6 @@ class _VerifikasiMobilePageState extends State<VerifikasiMobilePage> {
           latitude = result.latitude;
           longitude = result.longitude;
           isMock = result.isMockLocation;
-          setState(() {});
           geoCode();
         }
       });
@@ -126,11 +125,9 @@ class _VerifikasiMobilePageState extends State<VerifikasiMobilePage> {
         latitude: fixlatitude!,
         longitude: fixlongitude!,
         foto: foto);
-
+    // ignore: use_build_context_synchronously
+    Navigator.pop(context);
     if (response.error == null) {
-      setState(() {
-        isLoading = false;
-      });
       // ignore: use_build_context_synchronously
       customDialog('Berhasil', 'Verifikasi Berhasil Terkirim', 'Success', () {
         Navigator.pop(context);
@@ -141,9 +138,11 @@ class _VerifikasiMobilePageState extends State<VerifikasiMobilePage> {
       customDialog('Gagal', 'Coba kirim kembali', 'Failed', () {
         Navigator.pop(context);
       }, context);
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -316,16 +315,49 @@ class _VerifikasiMobilePageState extends State<VerifikasiMobilePage> {
           Padding(
               padding: const EdgeInsets.only(top: 50, bottom: 20),
               child: CustomElevatedButton(
-                  title: isLoading ? 'Proses' : 'Kirim',
+                  title: 'Kirim',
                   onPressed: () async {
-                    if (isLoading == false &&
-                        nikController.text.trim().isNotEmpty &&
+                    if (nikController.text.trim().isNotEmpty &&
                         phoneController.text.trim().isNotEmpty &&
                         ketController.text.trim().isNotEmpty &&
                         selectedImage != null) {
-                      setState(() {
-                        isLoading = true;
-                      });
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return WillPopScope(
+                            onWillPop: () async => true,
+                            child: Center(
+                              child: Container(
+                                  height: 100,
+                                  width: 100,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: Stack(
+                                    children: [
+                                      Center(
+                                          child: SizedBox(
+                                              width: 60,
+                                              height: 60,
+                                              child: CircularProgressIndicator(
+                                                color: primaryMain,
+                                                strokeWidth: 6,
+                                              ))),
+                                      Center(
+                                        child: Image.asset(
+                                          'assets/img_logo2.png',
+                                          width: 40,
+                                        ),
+                                      )
+                                    ],
+                                  )),
+                            ),
+                          );
+                        },
+                      );
+
                       final bytes = await controller.capture();
                       setState(() {
                         this.bytes = bytes;
