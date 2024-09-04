@@ -368,7 +368,7 @@ class _HomePageState extends State<HomePage> {
             ),
 
             //Verifikasi DDC
-            if (widget.role == 'relawan')
+            if (widget.role == 'relawan_ddc')
               Padding(
                 padding: const EdgeInsets.only(bottom: 27),
                 child: CustomVerifikasi(
