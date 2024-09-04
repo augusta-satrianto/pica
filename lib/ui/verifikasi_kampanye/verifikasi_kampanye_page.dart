@@ -24,8 +24,9 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 class VerifikasiKampanyePage extends StatefulWidget {
   final String role;
-
-  const VerifikasiKampanyePage({super.key, required this.role});
+  final String colorHex;
+  const VerifikasiKampanyePage(
+      {super.key, required this.role, required this.colorHex});
 
   @override
   State<VerifikasiKampanyePage> createState() => _VerifikasiKampanyePageState();
@@ -108,7 +109,8 @@ class _VerifikasiKampanyePageState extends State<VerifikasiKampanyePage> {
 
   File? file;
   saveUint8ListAsPng(Uint8List uint8List, String fileName) async {
-    img.Image image = img.decodeImage(uint8List)!;
+    Uint8List newBytes = await compressUintList(uint8List);
+    img.Image image = img.decodeImage(newBytes)!;
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String appDocPath = appDocDir.path;
     String filePath = '$appDocPath/$fileName.png';
@@ -193,6 +195,7 @@ class _VerifikasiKampanyePageState extends State<VerifikasiKampanyePage> {
           'Verifikasi Kampanye',
         ),
         centerTitle: true,
+        backgroundColor: hexToColor(widget.colorHex),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 15),
@@ -236,16 +239,19 @@ class _VerifikasiKampanyePageState extends State<VerifikasiKampanyePage> {
             placeholderText: 'NIK',
             controller: nikController,
             numberOnly: true,
+            colorHex: widget.colorHex,
           ),
           OutlineFormField(
             title: 'Barang yang Diberi',
             placeholderText: 'Barang yang Diberi',
             controller: barangController,
+            colorHex: widget.colorHex,
           ),
           OutlineFormField(
             title: 'Keterangan',
             placeholderText: 'Keterangan',
             controller: ketController,
+            colorHex: widget.colorHex,
           ),
           const SizedBox(
             height: 12,
@@ -253,7 +259,7 @@ class _VerifikasiKampanyePageState extends State<VerifikasiKampanyePage> {
           Text(
             'Upload Foto',
             style: poppins.copyWith(
-                fontWeight: semiBold, color: const Color(0xFF186968)),
+                fontWeight: semiBold, color: hexToColor(widget.colorHex)),
           ),
           const SizedBox(
             height: 4,
@@ -319,11 +325,13 @@ class _VerifikasiKampanyePageState extends State<VerifikasiKampanyePage> {
               padding: const EdgeInsets.only(top: 50, bottom: 20),
               child: CustomElevatedButton(
                   title: 'Kirim',
+                  colorHex: widget.colorHex,
                   onPressed: () async {
                     if (nikController.text.trim().isNotEmpty &&
                         barangController.text.trim().isNotEmpty &&
                         ketController.text.trim().isNotEmpty &&
-                        selectedImage != null) {
+                        selectedImage != null &&
+                        !isLoading) {
                       showDialog(
                         context: context,
                         barrierDismissible: false,
@@ -360,6 +368,7 @@ class _VerifikasiKampanyePageState extends State<VerifikasiKampanyePage> {
                           );
                         },
                       );
+                      isLoading = true;
                       final bytes = await controller.capture();
                       setState(() {
                         this.bytes = bytes;

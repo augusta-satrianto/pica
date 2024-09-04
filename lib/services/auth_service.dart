@@ -17,8 +17,10 @@ Future<ApiResponse> login(
       'identity': email,
       'password': password
     });
+    print(response.statusCode);
     switch (response.statusCode) {
       case 200:
+        print(jsonDecode(response.body)['data']);
         apiResponse.data =
             AuthModel.fromJson(jsonDecode(response.body)['data']);
         break;
@@ -44,10 +46,22 @@ Future<String> getRole() async {
   return preferences.getString('role') ?? '';
 }
 
+//get user id
+Future<int> getUserId() async {
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  return preferences.getInt('userId') ?? 0;
+}
+
 //get name
 Future<String> getName() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
   return preferences.getString('name') ?? '';
+}
+
+//get name
+Future<String> getFotoAtas() async {
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  return preferences.getString('fotoAtas') ?? '';
 }
 
 // get emailogin
@@ -62,8 +76,51 @@ Future<String> getPasswordLogin() async {
   return preferences.getString('passwordlogin') ?? '';
 }
 
+//get user id
+Future<int> getTeamId() async {
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  return preferences.getInt('teamId') ?? 0;
+}
+
+//get kabupatenCode
+Future<String> getKabupatenCode() async {
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  return preferences.getString('kabupatenCode') ?? '';
+}
+
+//get kecamatanCode
+Future<String> getKecamatanCode() async {
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  return preferences.getString('kecamatanCode') ?? '';
+}
+
+//get kelurahanCode
+Future<String> getKecamatanName() async {
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  return preferences.getString('kecamatanName') ?? '';
+}
+
+//get kelurahanCode
+Future<String> getKelurahanCode() async {
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  return preferences.getString('kelurahanCode') ?? '';
+}
+
+//get kelurahanCode
+Future<String> getKelurahanName() async {
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  return preferences.getString('kelurahanName') ?? '';
+}
+
+//get kelurahanCode
+Future<String> getColorHex() async {
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  return preferences.getString('colorHex') ?? '';
+}
+
 //logout
 Future<bool> logout() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
+  await preferences.remove('fotoAtas');
   return preferences.remove('token');
 }

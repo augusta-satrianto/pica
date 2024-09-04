@@ -33,12 +33,14 @@ dependencies:
   dropdown_button2: ^2.3.9
   flutter:
     sdk: flutter
+  flutter_image_compress: ^2.3.0
   flutter_launcher_icons: ^0.13.1
   flutter_localization: ^0.2.0
   geocoding: ^3.0.0
   gps_connectivity: ^0.0.4
   http: ^1.1.0
   image: ^4.1.7
+  image_gallery_saver: ^2.0.3
   image_picker: ^1.0.7
   internet_connection_checker: ^1.0.0+1
   intl: ^0.18.1
@@ -47,10 +49,11 @@ dependencies:
   permission_handler: ^11.0.1
   shared_preferences: ^2.2.2
   trust_location: ^2.0.13
-  widgets_to_image: ^0.0.2
+  url_launcher: ^6.1.6
+  widgets_to_image: ^1.0.0
 
 dev_dependencies:
-  flutter_lints: ^2.0.0
+  flutter_lints: ^4.0.0
   flutter_test:
     sdk: flutter
 

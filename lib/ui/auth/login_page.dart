@@ -68,6 +68,16 @@ class _LoginPageState extends State<LoginPage> {
     await preferences.setString('name', userModel.name);
     await preferences.setString('token', userModel.token);
     await preferences.setString('role', userModel.role);
+    await preferences.setInt('teamId', userModel.teamId);
+    await preferences.setString('kabupatenCode', userModel.kabupatenCode);
+    await preferences.setString('kecamatanCode', userModel.kecamatanCode);
+    await preferences.setString('kecamatanName', userModel.kecamatanName);
+    if (userModel.kelurahanCode != null) {
+      await preferences.setString('kelurahanCode', userModel.kelurahanCode!);
+      await preferences.setString('kelurahanName', userModel.kelurahanName!);
+    }
+
+    await preferences.setString('colorHex', userModel.colorHex);
 
     if (isChecked) {
       await preferences.setString('emaillogin', emailController.text);
@@ -84,6 +94,10 @@ class _LoginPageState extends State<LoginPage> {
           builder: (context) => HomePage(
             role: userModel.role,
             name: userModel.name,
+            kelurahanName: userModel.role == 'koordes'
+                ? userModel.kelurahanName!
+                : userModel.kecamatanName,
+            colorHex: userModel.colorHex,
           ),
         ),
         (route) => false);

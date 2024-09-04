@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:pica/shared/methods.dart';
 import 'package:pica/shared/theme.dart';
 
 class CustomElevatedButton extends StatelessWidget {
   final String title;
   final VoidCallback onPressed;
+  final String colorHex;
   const CustomElevatedButton(
-      {super.key, required this.title, required this.onPressed});
+      {super.key,
+      required this.title,
+      required this.onPressed,
+      required this.colorHex});
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: onPressed,
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(primaryMain),
+        backgroundColor: MaterialStateProperty.all<Color>(hexToColor(colorHex)),
         foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(

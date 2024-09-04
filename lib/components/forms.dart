@@ -1,5 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:pica/shared/methods.dart';
 import 'package:pica/shared/theme.dart';
 
 class OutlineFormField extends StatelessWidget {
@@ -8,6 +9,7 @@ class OutlineFormField extends StatelessWidget {
   final bool numberOnly;
   final bool readOnly;
   final TextEditingController controller;
+  final String colorHex;
 
   const OutlineFormField({
     super.key,
@@ -16,6 +18,7 @@ class OutlineFormField extends StatelessWidget {
     this.numberOnly = false,
     this.readOnly = false,
     required this.controller,
+    required this.colorHex,
   });
 
   @override
@@ -49,7 +52,7 @@ class OutlineFormField extends StatelessWidget {
                     Text(
                       title,
                       style: poppins.copyWith(
-                          fontWeight: semiBold, color: const Color(0xFF186968)),
+                          fontWeight: semiBold, color: hexToColor(colorHex)),
                     ),
                     const SizedBox(
                       height: 4,

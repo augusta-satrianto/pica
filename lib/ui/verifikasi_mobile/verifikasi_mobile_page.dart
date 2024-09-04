@@ -24,7 +24,9 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 class VerifikasiMobilePage extends StatefulWidget {
   final String role;
-  const VerifikasiMobilePage({super.key, required this.role});
+  final String colorHex;
+  const VerifikasiMobilePage(
+      {super.key, required this.role, required this.colorHex});
 
   @override
   State<VerifikasiMobilePage> createState() => _VerifikasiMobilePageState();
@@ -105,7 +107,8 @@ class _VerifikasiMobilePageState extends State<VerifikasiMobilePage> {
 
   File? file;
   saveUint8ListAsPng(Uint8List uint8List, String fileName) async {
-    img.Image image = img.decodeImage(uint8List)!;
+    Uint8List newBytes = await compressUintList(uint8List);
+    img.Image image = img.decodeImage(newBytes)!;
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String appDocPath = appDocDir.path;
     String filePath = '$appDocPath/$fileName.png';
@@ -188,6 +191,7 @@ class _VerifikasiMobilePageState extends State<VerifikasiMobilePage> {
         title: const Text(
           'Verifikasi Mobile',
         ),
+        backgroundColor: hexToColor(widget.colorHex),
         centerTitle: true,
         actions: [
           Padding(
@@ -232,26 +236,27 @@ class _VerifikasiMobilePageState extends State<VerifikasiMobilePage> {
             placeholderText: 'NIK',
             controller: nikController,
             numberOnly: true,
+            colorHex: widget.colorHex,
           ),
           OutlineFormField(
             title: 'No. Telp',
             placeholderText: 'No. Telp',
             controller: phoneController,
             numberOnly: true,
+            colorHex: widget.colorHex,
           ),
           OutlineFormField(
             title: 'Keterangan',
             placeholderText: 'Keterangan',
             controller: ketController,
+            colorHex: widget.colorHex,
           ),
           const SizedBox(
             height: 12,
           ),
-          Text(
-            'Upload Foto',
-            style: poppins.copyWith(
-                fontWeight: semiBold, color: const Color(0xFF186968)),
-          ),
+          Text('Upload Foto',
+              style: poppins.copyWith(
+                  fontWeight: semiBold, color: hexToColor(widget.colorHex))),
           const SizedBox(
             height: 4,
           ),
@@ -316,11 +321,13 @@ class _VerifikasiMobilePageState extends State<VerifikasiMobilePage> {
               padding: const EdgeInsets.only(top: 50, bottom: 20),
               child: CustomElevatedButton(
                   title: 'Kirim',
+                  colorHex: widget.colorHex,
                   onPressed: () async {
                     if (nikController.text.trim().isNotEmpty &&
                         phoneController.text.trim().isNotEmpty &&
                         ketController.text.trim().isNotEmpty &&
-                        selectedImage != null) {
+                        selectedImage != null &&
+                        !isLoading) {
                       showDialog(
                         context: context,
                         barrierDismissible: false,
@@ -357,7 +364,7 @@ class _VerifikasiMobilePageState extends State<VerifikasiMobilePage> {
                           );
                         },
                       );
-
+                      isLoading = true;
                       final bytes = await controller.capture();
                       setState(() {
                         this.bytes = bytes;

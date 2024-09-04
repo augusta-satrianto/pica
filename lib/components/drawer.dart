@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pica/services/auth_service.dart';
+import 'package:pica/shared/methods.dart';
 import 'package:pica/shared/theme.dart';
 import 'package:pica/ui/auth/login_page.dart';
 import 'package:pica/ui/home/comp/quick_count_page.dart';
@@ -22,8 +23,19 @@ class DrawerView extends StatefulWidget {
 
 class _DrawerViewState extends State<DrawerView> {
   String name = '';
+  String fotoAtas = '';
+  String wilayahName = '';
+  String colorHex = '';
+
   _getPrev() async {
     name = await getName();
+    fotoAtas = await getFotoAtas();
+    if (widget.role == 'koordes') {
+      wilayahName = await getKelurahanName();
+    } else {
+      wilayahName = await getKecamatanName();
+    }
+    colorHex = await getColorHex();
     if (mounted) {
       setState(() {});
     }
@@ -50,15 +62,15 @@ class _DrawerViewState extends State<DrawerView> {
           children: [
             Container(
               width: double.infinity,
-              height: 139 + paddingTop,
-              decoration: const BoxDecoration(
+              height:
+                  wilayahName.length < 17 ? 141 + paddingTop : 160 + paddingTop,
+              decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Color(0xFF186968),
-                    Color(0xFF6BA3A2),
-                    Color(0xFFD6EEEE),
+                    hexToColor(colorHex),
+                    hexToGradient(colorHex, 0.6),
                   ],
                 ),
               ),
@@ -68,18 +80,32 @@ class _DrawerViewState extends State<DrawerView> {
                     width: 71.19,
                     height: 70,
                     margin: EdgeInsets.only(top: 20 + paddingTop, bottom: 5),
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        image: DecorationImage(
-                            image: AssetImage(
-                              'assets/img_profile.png',
-                            ),
-                            fit: BoxFit.cover)),
+                        image: fotoAtas == ''
+                            ? const DecorationImage(
+                                image: AssetImage(
+                                  'assets/img_profile.png',
+                                ),
+                                fit: BoxFit.cover)
+                            : DecorationImage(
+                                image: NetworkImage(fotoAtas),
+                                fit: BoxFit.cover)),
                   ),
                   Text(
-                    name,
+                    widget.role == 'relawan'
+                        ? wilayahName.length < 17
+                            ? 'relawan (${wilayahName.toLowerCase()})'
+                            : 'relawan\n(${wilayahName.toLowerCase()})'
+                        : wilayahName.length < 17
+                            ? 'koordes (${wilayahName.toLowerCase()})'
+                            : 'koordes\n(${wilayahName.toLowerCase()})',
                     style: poppins.copyWith(
-                        fontWeight: bold, fontSize: 16, color: Colors.white),
+                      fontWeight: bold,
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
+                    textAlign: TextAlign.center,
                   )
                 ],
               ),
@@ -93,6 +119,7 @@ class _DrawerViewState extends State<DrawerView> {
                 CustomMenuDrawer(
                   urlIcon: 'assets/ic_home.png',
                   title: 'Home',
+                  colorHex: colorHex,
                   onPressed: () {
                     widget.pageActive == 'home'
                         ? Navigator.pop(context)
@@ -102,6 +129,8 @@ class _DrawerViewState extends State<DrawerView> {
                               builder: (context) => HomePage(
                                 role: widget.role,
                                 name: name,
+                                kelurahanName: wilayahName,
+                                colorHex: colorHex,
                               ),
                             ),
                             (route) => false);
@@ -109,103 +138,112 @@ class _DrawerViewState extends State<DrawerView> {
                 ),
 
                 // Verifikasi Mobile
-                ['koordes', 'koortps', 'relawan'].contains(widget.role)
-                    ? CustomMenuDrawer(
-                        urlIcon: 'assets/ic_mobile.png',
-                        title: 'Verifikasi Mobile',
-                        onPressed: () {
+                if (widget.role == 'relawan')
+                  CustomMenuDrawer(
+                    urlIcon: 'assets/ic_mobile.png',
+                    title: 'Verifikasi Mobile',
+                    colorHex: colorHex,
+                    onPressed: () {
+                      Navigator.pop(context);
+                      if (widget.pageActive != 'mobile' ||
+                          widget.pageActive == 'validmobile') {
+                        if (widget.pageActive != 'home' ||
+                            widget.pageActive == 'validmobile') {
                           Navigator.pop(context);
-                          if (widget.pageActive != 'mobile' ||
-                              widget.pageActive == 'validmobile') {
-                            if (widget.pageActive != 'home' ||
-                                widget.pageActive == 'validmobile') {
-                              Navigator.pop(context);
-                            }
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => VerifikasiMobilePage(
-                                  role: widget.role,
-                                ),
-                              ),
-                            );
-                          }
-                        },
-                      )
-                    : Container(),
+                        }
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => VerifikasiMobilePage(
+                              role: widget.role,
+                              colorHex: colorHex,
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                  ),
 
                 // Verifikasi APK
-                ['koordes', 'koortps', 'relawan'].contains(widget.role)
-                    ? CustomMenuDrawer(
-                        urlIcon: 'assets/ic_apk.png',
-                        title: 'Verifikasi APK',
-                        onPressed: () {
+                if (widget.role == 'relawan')
+                  CustomMenuDrawer(
+                    urlIcon: 'assets/ic_apk.png',
+                    title: 'Verifikasi APK',
+                    colorHex: colorHex,
+                    onPressed: () {
+                      Navigator.pop(context);
+                      if (widget.pageActive != 'apk' ||
+                          widget.pageActive == 'validapk') {
+                        if (widget.pageActive != 'home' ||
+                            widget.pageActive == 'validapk') {
                           Navigator.pop(context);
-                          if (widget.pageActive != 'apk' ||
-                              widget.pageActive == 'validapk') {
-                            if (widget.pageActive != 'home' ||
-                                widget.pageActive == 'validapk') {
-                              Navigator.pop(context);
-                            }
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => VerifikasiApkPage(
-                                  role: widget.role,
-                                ),
-                              ),
-                            );
-                          }
-                        },
-                      )
-                    : Container(),
+                        }
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => VerifikasiApkPage(
+                              role: widget.role,
+                              colorHex: colorHex,
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                  ),
 
                 // Verifikasi Kampanye
-                ['koordes', 'koortps', 'relawan'].contains(widget.role)
-                    ? CustomMenuDrawer(
-                        urlIcon: 'assets/ic_kampanye.png',
-                        title: 'Verifikasi Kampanye',
-                        onPressed: () {
+                if (widget.role == 'relawan')
+                  CustomMenuDrawer(
+                    urlIcon: 'assets/ic_kampanye.png',
+                    title: 'Verifikasi Kampanye',
+                    colorHex: colorHex,
+                    onPressed: () {
+                      Navigator.pop(context);
+                      if (widget.pageActive != 'kampanye' ||
+                          widget.pageActive == 'validkampanye') {
+                        if (widget.pageActive != 'home' ||
+                            widget.pageActive == 'validkampanye') {
                           Navigator.pop(context);
-                          if (widget.pageActive != 'kampanye' ||
-                              widget.pageActive == 'validkampanye') {
-                            if (widget.pageActive != 'home' ||
-                                widget.pageActive == 'validkampanye') {
-                              Navigator.pop(context);
-                            }
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => VerifikasiApkPage(
-                                  role: widget.role,
-                                ),
-                              ),
-                            );
-                          }
-                        },
-                      )
-                    : Container(),
-
-                CustomMenuDrawer(
-                  urlIcon: 'assets/ic_quick.png',
-                  title: 'Quick Count',
-                  onPressed: () {
-                    Navigator.pop(context);
-                    if (widget.pageActive != 'quick') {
-                      if (widget.pageActive != 'home') {
-                        Navigator.pop(context);
-                      }
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => QuickCountPage(
-                            role: widget.role,
+                        }
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => VerifikasiApkPage(
+                              role: widget.role,
+                              colorHex: colorHex,
+                            ),
                           ),
-                        ),
-                      );
-                    }
-                  },
-                ),
+                        );
+                      }
+                    },
+                  ),
+
+                //Quick Count
+                if (widget.role == 'koordes')
+                  CustomMenuDrawer(
+                    urlIcon: 'assets/ic_quick.png',
+                    title: 'Quick Count',
+                    colorHex: colorHex,
+                    onPressed: () {
+                      Navigator.pop(context);
+                      if (widget.pageActive != 'quick') {
+                        if (widget.pageActive != 'home') {
+                          Navigator.pop(context);
+                        }
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => QuickCountPage(
+                              role: widget.role,
+                              colorHex: colorHex,
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                  ),
+
+                //Real Count
                 // CustomMenuDrawer(
                 //   urlIcon: 'assets/ic_real.png',
                 //   title: 'Real Count',
@@ -226,9 +264,12 @@ class _DrawerViewState extends State<DrawerView> {
                 //     }
                 //   },
                 // ),
+
+                //Logout
                 CustomMenuDrawer(
                   urlIcon: 'assets/ic_logout.png',
                   title: 'Logout',
+                  colorHex: colorHex,
                   onPressed: () {
                     logout().then((value) => Navigator.pushAndRemoveUntil(
                         context,
@@ -250,11 +291,13 @@ class CustomMenuDrawer extends StatelessWidget {
   final String urlIcon;
   final String title;
   final VoidCallback onPressed;
+  final String colorHex;
   const CustomMenuDrawer(
       {super.key,
       required this.urlIcon,
       required this.title,
-      required this.onPressed});
+      required this.onPressed,
+      required this.colorHex});
 
   @override
   Widget build(BuildContext context) {
@@ -278,9 +321,15 @@ class CustomMenuDrawer extends StatelessWidget {
           ),
           Row(
             children: [
-              Image.asset(
-                urlIcon,
+              Container(
+                height: 35,
                 width: 35,
+                decoration: BoxDecoration(
+                    color: hexToColor(colorHex), shape: BoxShape.circle),
+                child: Image.asset(
+                  urlIcon,
+                  width: 35,
+                ),
               ),
               const SizedBox(
                 width: 15,

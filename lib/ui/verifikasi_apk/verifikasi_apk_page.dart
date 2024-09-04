@@ -25,7 +25,9 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 class VerifikasiApkPage extends StatefulWidget {
   final String role;
-  const VerifikasiApkPage({super.key, required this.role});
+  final String colorHex;
+  const VerifikasiApkPage(
+      {super.key, required this.role, required this.colorHex});
 
   @override
   State<VerifikasiApkPage> createState() => _VerifikasiApkPageState();
@@ -108,7 +110,8 @@ class _VerifikasiApkPageState extends State<VerifikasiApkPage> {
 
   File? file;
   saveUint8ListAsPng(Uint8List uint8List, String fileName) async {
-    img.Image image = img.decodeImage(uint8List)!;
+    Uint8List newBytes = await compressUintList(uint8List);
+    img.Image image = img.decodeImage(newBytes)!;
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String appDocPath = appDocDir.path;
     String filePath = '$appDocPath/$fileName.png';
@@ -194,6 +197,7 @@ class _VerifikasiApkPageState extends State<VerifikasiApkPage> {
           'Verifikasi APK',
         ),
         centerTitle: true,
+        backgroundColor: hexToColor(widget.colorHex),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 15),
@@ -239,16 +243,19 @@ class _VerifikasiApkPageState extends State<VerifikasiApkPage> {
                 placeholderText: 'NIK',
                 controller: nikController,
                 numberOnly: true,
+                colorHex: widget.colorHex,
               ),
               OutlineFormField(
                 title: 'Alamat',
                 placeholderText: 'Alamat',
                 controller: alamatController,
+                colorHex: widget.colorHex,
               ),
               OutlineFormField(
                 title: 'Keterangan',
                 placeholderText: 'Keterangan',
                 controller: ketController,
+                colorHex: widget.colorHex,
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -259,7 +266,8 @@ class _VerifikasiApkPageState extends State<VerifikasiApkPage> {
                   Text(
                     'Upload Foto',
                     style: poppins.copyWith(
-                        fontWeight: semiBold, color: const Color(0xFF186968)),
+                        fontWeight: semiBold,
+                        color: hexToColor(widget.colorHex)),
                   ),
                   const SizedBox(
                     height: 4,
@@ -328,11 +336,13 @@ class _VerifikasiApkPageState extends State<VerifikasiApkPage> {
                       padding: const EdgeInsets.only(top: 50, bottom: 20),
                       child: CustomElevatedButton(
                           title: 'Kirim',
+                          colorHex: widget.colorHex,
                           onPressed: () async {
                             if (nikController.text.trim().isNotEmpty &&
                                 alamatController.text.trim().isNotEmpty &&
                                 ketController.text.trim().isNotEmpty &&
-                                selectedImage != null) {
+                                selectedImage != null &&
+                                !isLoading) {
                               showDialog(
                                 context: context,
                                 barrierDismissible: false,
@@ -378,7 +388,7 @@ class _VerifikasiApkPageState extends State<VerifikasiApkPage> {
                                   this.bytes = bytes;
                                 });
                               }
-                              ;
+
                               String a = DateTime.now()
                                   .toString()
                                   .replaceAll(RegExp(r'[-:\s]'), '')

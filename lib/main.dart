@@ -16,6 +16,8 @@ void main() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
   String name = await getName();
+  String kelurahanName = await getKelurahanName();
+  String colorHex = await getColorHex();
   Widget startWidget;
   if (isFirstTime) {
     startWidget = const OnboardingPage();
@@ -28,6 +30,8 @@ void main() async {
       startWidget = HomePage(
         role: role,
         name: name,
+        kelurahanName: kelurahanName,
+        colorHex: colorHex,
       );
     }
   }
@@ -47,7 +51,7 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitUp,
     ]);
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'PICA',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         appBarTheme: AppBarTheme(

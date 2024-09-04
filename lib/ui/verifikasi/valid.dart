@@ -1,25 +1,58 @@
 import 'package:flutter/material.dart';
 import 'package:pica/components/drawer.dart';
+import 'package:pica/models/api_response_model.dart';
+import 'package:pica/models/valid_invalid_model.dart';
+import 'package:pica/services/valid_invalid_service.dart';
+import 'package:pica/shared/methods.dart';
 import 'package:pica/shared/theme.dart';
 
-class ValidKampanyePage extends StatefulWidget {
+class ValidPage extends StatefulWidget {
   final String role;
-  const ValidKampanyePage({super.key, required this.role});
+  final String jenis;
+  final String title;
+  final String drawer;
+  final String colorHex;
+  const ValidPage(
+      {super.key,
+      required this.role,
+      required this.jenis,
+      required this.title,
+      required this.drawer,
+      required this.colorHex});
 
   @override
-  State<ValidKampanyePage> createState() => _ValidKampanyePageState();
+  State<ValidPage> createState() => _ValidPageState();
 }
 
-class _ValidKampanyePageState extends State<ValidKampanyePage> {
+class _ValidPageState extends State<ValidPage> {
+  List<dynamic> verifikasiList = [];
+  void _getVerifikasi() async {
+    ApiResponse response =
+        await getVerifikasi(jenis: widget.jenis, status: 'Valid');
+    if (response.error == null) {
+      verifikasiList = response.data as List<dynamic>;
+      if (mounted) {
+        setState(() {});
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    _getVerifikasi();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Valid\nVerifikasi Kampanye',
+        title: Text(
+          widget.title,
           textAlign: TextAlign.center,
         ),
         centerTitle: true,
+        backgroundColor: hexToColor(widget.colorHex),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 15),
@@ -48,7 +81,7 @@ class _ValidKampanyePageState extends State<ValidKampanyePage> {
         ),
       ),
       drawer: DrawerView(
-        pageActive: 'validkampanye',
+        pageActive: widget.drawer,
         role: widget.role,
       ),
       body: ListView(
@@ -78,7 +111,7 @@ class _ValidKampanyePageState extends State<ValidKampanyePage> {
                             'No.',
                             style: poppins.copyWith(
                                 fontWeight: semiBold,
-                                color: const Color(0xFF186968)),
+                                color: hexToColor(widget.colorHex)),
                           )),
                       const SizedBox(
                         width: 10,
@@ -87,7 +120,7 @@ class _ValidKampanyePageState extends State<ValidKampanyePage> {
                         'Nama',
                         style: poppins.copyWith(
                             fontWeight: semiBold,
-                            color: const Color(0xFF186968)),
+                            color: hexToColor(widget.colorHex)),
                       )
                     ],
                   ),
@@ -100,7 +133,8 @@ class _ValidKampanyePageState extends State<ValidKampanyePage> {
                         borderRadius: BorderRadius.circular(3)),
                   ),
                   Column(
-                      children: List.generate(10, (index) {
+                      children: List.generate(verifikasiList.length, (index) {
+                    VerifikasiModel verifikasi = verifikasiList[index];
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 10),
                       child: Row(
@@ -117,7 +151,7 @@ class _ValidKampanyePageState extends State<ValidKampanyePage> {
                           ),
                           Expanded(
                             child: Text(
-                              'Lorem Ipsum',
+                              verifikasi.name,
                               style: poppins.copyWith(
                                   color: const Color(0xFF232323)),
                             ),
