@@ -12,6 +12,7 @@ import 'package:pica/ui/verifikasi/valid.dart';
 import 'package:pica/ui/verifikasi_apk/verifikasi_apk_page.dart';
 import 'package:pica/ui/verifikasi_kampanye/verifikasi_kampanye_page.dart';
 import 'package:pica/ui/verifikasi_mobile/verifikasi_mobile_page.dart';
+import 'package:pica/ui/verifikasi_ddc/verifikasi_ddc_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
@@ -365,6 +366,64 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
+
+            //Verifikasi DDC
+            if (widget.role == 'relawan')
+              Padding(
+                padding: const EdgeInsets.only(bottom: 27),
+                child: CustomVerifikasi(
+                  title: 'Verifikasi DDC',
+                  colorHex: widget.colorHex,
+                  countTotal: dashboardModel != null
+                      ? dashboardModel!.verifikasiDdc.total.toString()
+                      : '-',
+                  countValid: dashboardModel != null
+                      ? dashboardModel!.verifikasiDdc.valid.toString()
+                      : '-',
+                  countInvalid: dashboardModel != null
+                      ? dashboardModel!.verifikasiDdc.invalid.toString()
+                      : '-',
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => VerifikasiDdcPage(
+                          role: widget.role,
+                          colorHex: widget.colorHex,
+                        ),
+                      ),
+                    );
+                  },
+                  onPressedValid: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ValidPage(
+                          role: widget.role,
+                          jenis: 'list-verddc',
+                          title: 'Valid\nVerifikasi DDC',
+                          drawer: 'validddc',
+                          colorHex: widget.colorHex,
+                        ),
+                      ),
+                    );
+                  },
+                  onPressedInvalid: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => InvalidPage(
+                          role: widget.role,
+                          jenis: 'list-verddc',
+                          title: 'Invalid\nVerifikasi DDC',
+                          drawer: 'validddc',
+                          colorHex: widget.colorHex,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
 
             //Verifikasi Mobile
             if (widget.role == 'relawan')

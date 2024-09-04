@@ -3,12 +3,14 @@ class DashboardModel {
   final VerifikasiAPK verifikasiAPK;
   final VerifikasiKampanye verifikasiKampanye;
   final VerifikasiMobile verifikasiMobile;
+  final VerifikasiDdc verifikasiDdc;
 
   DashboardModel({
     required this.team,
     required this.verifikasiAPK,
     required this.verifikasiKampanye,
     required this.verifikasiMobile,
+    required this.verifikasiDdc
   });
 
   factory DashboardModel.fromJson(Map<String, dynamic> json) {
@@ -18,6 +20,7 @@ class DashboardModel {
       verifikasiKampanye:
           VerifikasiKampanye.fromJson(json['verifikasi_kampanye']),
       verifikasiMobile: VerifikasiMobile.fromJson(json['verifikasi_mobile']),
+      verifikasiDdc: VerifikasiDdc.fromJson(json['verifikasi_ddc'])
     );
   }
 }
@@ -137,6 +140,23 @@ class VerifikasiMobile {
 
   factory VerifikasiMobile.fromJson(Map<String, dynamic> json) {
     return VerifikasiMobile(
+      total: json['total'],
+      valid: json['valid'],
+      invalid: json['invalid'],
+    );
+  }
+}
+
+class VerifikasiDdc {
+  final int total;
+  final int valid;
+  final int invalid;
+
+  VerifikasiDdc(
+      {required this.total, required this.valid, required this.invalid});
+
+  factory VerifikasiDdc.fromJson(Map<String, dynamic> json) {
+    return VerifikasiDdc(
       total: json['total'],
       valid: json['valid'],
       invalid: json['invalid'],
