@@ -117,7 +117,7 @@ class _ValidPageState extends State<ValidPage> {
                         width: 10,
                       ),
                       Text(
-                        'Nama',
+                        widget.jenis == 'list-verddc' ? 'NKK' : 'Nama',
                         style: poppins.copyWith(
                             fontWeight: semiBold,
                             color: hexToColor(widget.colorHex)),

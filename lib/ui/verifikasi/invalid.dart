@@ -135,7 +135,7 @@ class _InvalidPageState extends State<InvalidPage> {
                       ),
                       Expanded(
                         child: Text(
-                          'Nama',
+                          widget.jenis == 'list-verddc' ? 'NKK' : 'Nama',
                           style: poppins.copyWith(
                               fontWeight: semiBold,
                               color: hexToColor(widget.colorHex)),

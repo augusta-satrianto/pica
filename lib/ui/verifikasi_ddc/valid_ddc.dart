@@ -149,13 +149,13 @@ class _ValidDdcPageState extends State<ValidDdcPage> {
                           const SizedBox(
                             width: 10,
                           ),
-                          Expanded(
-                            child: Text(
-                              verifikasi.nkk,
-                              style: poppins.copyWith(
-                                  color: const Color(0xFF232323)),
-                            ),
-                          )
+                          // Expanded(
+                          //   child: Text(
+                          //     verifikasi.nkk,
+                          //     style: poppins.copyWith(
+                          //         color: const Color(0xFF232323)),
+                          //   ),
+                          // )
                         ],
                       ),
                     );

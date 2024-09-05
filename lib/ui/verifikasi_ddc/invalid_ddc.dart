@@ -28,6 +28,7 @@ class InvalidDdcPage extends StatefulWidget {
 class _InvalidDdcPageState extends State<InvalidDdcPage> {
   List<dynamic> verifikasiList = [];
   void _getVerifikasi() async {
+    print('getver');
     ApiResponse response =
         await getVerifikasi(jenis: widget.jenis, status: 'Invalid');
     if (response.error == null) {
@@ -179,13 +180,13 @@ class _InvalidDdcPageState extends State<InvalidDdcPage> {
                         const SizedBox(
                           width: 10,
                         ),
-                        Expanded(
-                          child: Text(
-                            verifikasi.nkk,
-                            style: poppins.copyWith(
-                                color: const Color(0xFF232323)),
-                          ),
-                        ),
+                        // Expanded(
+                        //   child: Text(
+                        //     verifikasi.nkk,
+                        //     style: poppins.copyWith(
+                        //         color: const Color(0xFF232323)),
+                        //   ),
+                        // ),
                         const SizedBox(
                           width: 10,
                         ),

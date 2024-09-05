@@ -11,6 +11,7 @@ Future<ApiResponse> getVerifikasi(
   try {
     String token = await getToken();
     int id = await getUserId();
+    print('$baseURL/mobile/$jenis?user_id=$id&status_validasi=$status');
     final response = await http.get(
         Uri.parse('$baseURL/mobile/$jenis?user_id=$id&status_validasi=$status'),
         headers: {

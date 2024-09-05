@@ -24,7 +24,9 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 class VerifikasiDdcPage extends StatefulWidget {
   final String role;
-  const VerifikasiDdcPage({super.key, required this.role});
+  final String colorHex;
+  const VerifikasiDdcPage(
+      {super.key, required this.role, required this.colorHex});
 
   @override
   State<VerifikasiDdcPage> createState() => _VerifikasiDdcPageState();
@@ -230,11 +232,13 @@ class _VerifikasiDdcPageState extends State<VerifikasiDdcPage> {
             placeholderText: 'NKK',
             controller: nkkController,
             numberOnly: true,
+            colorHex: widget.colorHex,
           ),
           OutlineFormField(
             title: 'Keterangan',
             placeholderText: 'Keterangan',
             controller: ketController,
+            colorHex: widget.colorHex,
           ),
           const SizedBox(
             height: 12,
@@ -307,6 +311,7 @@ class _VerifikasiDdcPageState extends State<VerifikasiDdcPage> {
           Padding(
               padding: const EdgeInsets.only(top: 50, bottom: 20),
               child: CustomElevatedButton(
+                  colorHex: widget.colorHex,
                   title: 'Kirim',
                   onPressed: () async {
                     if (nkkController.text.trim().isNotEmpty &&
