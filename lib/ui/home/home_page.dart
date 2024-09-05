@@ -277,17 +277,11 @@ class _HomePageState extends State<HomePage> {
                             color: const Color(0xFF404040)),
                       ),
                       if (dashboardModel != null)
-                        Column(children: [
-                          CustomVisiMisi(text: dashboardModel!.team.visi1!),
-                          if (dashboardModel!.team.visi2.toString() != 'null')
-                            CustomVisiMisi(text: dashboardModel!.team.visi2!),
-                          if (dashboardModel!.team.visi3.toString() != 'null')
-                            CustomVisiMisi(text: dashboardModel!.team.visi3!),
-                          if (dashboardModel!.team.visi4.toString() != 'null')
-                            CustomVisiMisi(text: dashboardModel!.team.visi4!),
-                          if (dashboardModel!.team.visi5.toString() != 'null')
-                            CustomVisiMisi(text: dashboardModel!.team.visi5!),
-                        ]),
+                        Column(
+                          children: dashboardModel!.team.listVisi!.map((visi) {
+                            return CustomVisiMisi(text: visi);
+                          }).toList(),
+                        ),
                       const SizedBox(
                         height: 10,
                       ),
@@ -299,17 +293,11 @@ class _HomePageState extends State<HomePage> {
                             color: const Color(0xFF404040)),
                       ),
                       if (dashboardModel != null)
-                        Column(children: [
-                          CustomVisiMisi(text: dashboardModel!.team.misi1!),
-                          if (dashboardModel!.team.misi2.toString() != 'null')
-                            CustomVisiMisi(text: dashboardModel!.team.misi2!),
-                          if (dashboardModel!.team.misi3.toString() != 'null')
-                            CustomVisiMisi(text: dashboardModel!.team.misi3!),
-                          if (dashboardModel!.team.misi4.toString() != 'null')
-                            CustomVisiMisi(text: dashboardModel!.team.misi4!),
-                          if (dashboardModel!.team.misi5.toString() != 'null')
-                            CustomVisiMisi(text: dashboardModel!.team.misi5!),
-                        ]),
+                        Column(
+                          children: dashboardModel!.team.listMisi!.map((visi) {
+                            return CustomVisiMisi(text: misi);
+                          }).toList(),
+                        ),
                       const SizedBox(
                         height: 10,
                       ),

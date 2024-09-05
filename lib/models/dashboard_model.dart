@@ -45,6 +45,8 @@ class Team {
   String? misi3;
   String? misi4;
   String? misi5;
+  List<String>? listVisi;
+  List<String>? listMisi;
   String? colorHex;
 
   Team({
@@ -67,6 +69,8 @@ class Team {
     this.misi3,
     this.misi4,
     this.misi5,
+    this.listVisi,
+    this.listMisi,
     this.colorHex,
   });
 
@@ -91,6 +95,8 @@ class Team {
       misi3: json['team']['misi3'],
       misi4: json['team']['misi4'],
       misi5: json['team']['misi5'],
+      listVisi: (json['team']['visi'] as List<dynamic>).map((item) => item['text'] as String).toList(),
+      listMisi: (json['team']['misi'] as List<dynamic>).map((item) => item['text'] as String).toList(),
       colorHex: json['team']['colorHex'],
     );
   }
